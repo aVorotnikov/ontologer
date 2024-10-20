@@ -5,3 +5,6 @@
 * Python
 * neo4j
 * qwen
+
+## Ссылки
++ [Описание хранения онтологий](ontologies.md)
