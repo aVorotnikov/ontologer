@@ -1,64 +1,64 @@
-{"name": "Конечное множество", "domain": "Наивная теория множеств", "modifiers": []}
-{"name": "Пустое множество", "domain": "Наивная теория множеств", "modifiers": ["object"]}
-{"name": "Семейство множеств", "domain": "Наивная теория множеств", "modifiers": []}
-{"name": "Элемент множества", "domain": "Наивная теория множеств", "modifiers": []}
-{"name": "Алфавит", "domain": "Наивная теория множеств", "modifiers": []}
-{"name": "Буква", "domain": "Наивная теория множеств", "modifiers": []}
-{"name": "Слово", "domain": "Наивная теория множеств", "modifiers": []}
-{"name": "Язык", "domain": "Наивная теория множеств", "modifiers": []}
+[
+{"name": "Конечное множество", "domain": "Наивная теория множеств", "modifiers": []},
+{"name": "Пустое множество", "domain": "Наивная теория множеств", "modifiers": ["object"]},
+{"name": "Семейство множеств", "domain": "Наивная теория множеств", "modifiers": []},
+{"name": "Элемент множества", "domain": "Наивная теория множеств", "modifiers": []},
+{"name": "Алфавит", "domain": "Наивная теория множеств", "modifiers": []},
+{"name": "Буква", "domain": "Наивная теория множеств", "modifiers": []},
+{"name": "Слово", "domain": "Наивная теория множеств", "modifiers": []},
+{"name": "Язык", "domain": "Наивная теория множеств", "modifiers": []},
 
-{"name": "Множество", "modifiers": []}
-{"name": "Мультимножество", "modifiers": []}
-{"name": "Последовательность", "modifiers": []}
+{"name": "Множество", "modifiers": []},
+{"name": "Мультимножество", "modifiers": []},
+{"name": "Последовательность", "modifiers": []},
 
-{"name": "Бесконечное множество", "modifiers": []}
-{"name": "Счётное множество", "modifiers": []}
-{"name": "Несчётное множество", "modifiers": []}
+{"name": "Бесконечное множество", "modifiers": []},
+{"name": "Счётное множество", "modifiers": []},
+{"name": "Несчётное множество", "modifiers": []},
 
-{"name": "Упорядоченность", "modifiers": ["object"]}
+{"name": "Упорядоченность", "modifiers": ["object"]},
 
-{"name": "Натуральное число", "modifiers": []}
+{"name": "Натуральное число", "modifiers": []},
 
-{"name": "Перенумеровать", "modifiers": ["algorithm"]}
-{"name": "Характеристический предикат", "modifiers": ["algorithm"]}
-{"name": "Порождающая процедура", "modifiers": ["algorithm"]}
+{"name": "Перенумеровать", "modifiers": ["algorithm"]},
+{"name": "Характеристический предикат", "modifiers": ["algorithm"]},
+{"name": "Порождающая процедура", "modifiers": ["algorithm"]},
 
+{"type": "Realization", "name1": "Пустое множество", "name2": "Конечное множество"},
+{"type": "Inheritance", "name1": "Алфавит", "name2": "Конечное множество"},
+{"type": "Aggregation", "name1": "Буква", "name2": "Алфавит"},
+{"type": "Aggregation", "name1": "Буква", "name2": "Слово"},
+{"type": "Aggregation", "name1": "Слово", "name2": "Язык"},
 
-{"type": "Realization", "name1": "Пустое множество", "name2": "Конечное множество"}
-{"type": "Inheritance", "name1": "Алфавит", "name2": "Конечное множество"}
-{"type": "Aggregation", "name1": "Буква", "name2": "Алфавит"}
-{"type": "Aggregation", "name1": "Буква", "name2": "Слово"}
-{"type": "Aggregation", "name1": "Слово", "name2": "Язык"}
+{"type": "Inheritance", "name1": "Семейство множеств", "name2": "Множество"},
+{"type": "Inheritance", "name1": "Множество", "name2": "Мультимножество"},
+{"type": "Inheritance", "name1": "Мультимножество", "name2": "Последовательность"},
 
-{"type": "Inheritance", "name1": "Семейство множеств", "name2": "Множество"}
-{"type": "Inheritance", "name1": "Множество", "name2": "Мультимножество"}
-{"type": "Inheritance", "name1": "Мультимножество", "name2": "Последовательность"}
+{"type": "Inheritance", "name1": "Слово", "name2": "Последовательность"},
+{"type": "Inheritance", "name1": "Последовательность", "name2": "Упорядоченность"},
 
-{"type": "Inheritance", "name1": "Слово", "name2": "Последовательность"}
-{"type": "Inheritance", "name1": "Последовательность", "name2": "Упорядоченность"}
+{"type": "Inheritance", "name1": "Бесконечное множество", "name2": "Множество"},
+{"type": "Inheritance", "name1": "Счётное множество", "name2": "Бесконечное множество"},
+{"type": "Inheritance", "name1": "Несчётное множество", "name2": "Бесконечное множество"},
 
-{"type": "Inheritance", "name1": "Бесконечное множество", "name2": "Множество"}
-{"type": "Inheritance", "name1": "Счётное множество", "name2": "Бесконечное множество"}
-{"type": "Inheritance", "name1": "Несчётное множество", "name2": "Бесконечное множество"}
+{"type": "Dependency", "name1": "Последовательность", "name2": "Упорядоченность"},
+{"type": "Dependency", "name1": "Слово", "name2": "Последовательность"},
+{"type": "Dependency", "name1": "Последовательность", "name2": "Мультимножество"},
+{"type": "Dependency", "name1": "Мультимножество", "name2": "Множество"},
+{"type": "Dependency", "name1": "Мультимножество", "name2": "Натуральное число"},
 
+{"type": "Dependency", "name1": "Язык", "name2": "Множество"},
+{"type": "Dependency", "name1": "Конечное множество", "name2": "Множество"},
+{"type": "Dependency", "name1": "Язык", "name2": "Слово"},
+{"type": "Dependency", "name1": "Слово", "name2": "Буква"},
+{"type": "Dependency", "name1": "Алфавит", "name2": "Буква"},
+{"type": "Dependency", "name1": "Алфавит", "name2": "Конечное множество"},
 
-{"type": "Dependency", "name1": "Последовательность", "name2": "Упорядоченность"}
-{"type": "Dependency", "name1": "Слово", "name2": "Последовательность"}
-{"type": "Dependency", "name1": "Последовательность", "name2": "Мультимножество"}
-{"type": "Dependency", "name1": "Мультимножество", "name2": "Множество"}
-{"type": "Dependency", "name1": "Мультимножество", "name2": "Натуральное число"}
+{"type": "Input", "name1": "Элемент", "name2": "Перенумеровать"},
+{"type": "Output", "name1": "Перенумеровать", "name2": "Конечное множество"},
+{"type": "Input", "name1": "Мультимножество", "name2": "Перенумеровать"},
+{"type": "Output", "name1": "Перенумеровать", "name2": "Последовательность"},
 
-{"type": "Dependency", "name1": "Язык", "name2": "Множество"}
-{"type": "Dependency", "name1": "Конечное множество", "name2": "Множество"}
-{"type": "Dependency", "name1": "Язык", "name2": "Слово"}
-{"type": "Dependency", "name1": "Слово", "name2": "Буква"}
-{"type": "Dependency", "name1": "Алфавит", "name2": "Буква"}
-{"type": "Dependency", "name1": "Алфавит", "name2": "Конечное множество"}
-
-{"type": "Input", "name1": "Элемент", "name2": "Перенумеровать"}
-{"type": "Output", "name1": "Перенумеровать", "name2": "Конечное множество"}
-{"type": "Input", "name1": "Мультимножество", "name2": "Перенумеровать"}
-{"type": "Output", "name1": "Перенумеровать", "name2": "Последовательность"}
-
-{"type": "Output", "name1": "Характеристический предикат", "name2": "Множество"}
-{"type": "Output", "name1": "Порождающая процедура", "name2": "Множество"}
+{"type": "Output", "name1": "Характеристический предикат", "name2": "Множество"},
+{"type": "Output", "name1": "Порождающая процедура", "name2": "Множество"},
+]
