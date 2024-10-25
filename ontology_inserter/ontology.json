@@ -1,14 +1,15 @@
 [
-{"name": "Конечное множество", "domain": "Наивная теория множеств", "modifiers": []},
+{"name": "Конечное множество", "modifiers": []},
 {"name": "Пустое множество", "domain": "Наивная теория множеств", "modifiers": ["object"]},
-{"name": "Семейство множеств", "domain": "Наивная теория множеств", "modifiers": []},
-{"name": "Элемент множества", "domain": "Наивная теория множеств", "modifiers": []},
-{"name": "Алфавит", "domain": "Наивная теория множеств", "modifiers": []},
-{"name": "Буква", "domain": "Наивная теория множеств", "modifiers": []},
-{"name": "Слово", "domain": "Наивная теория множеств", "modifiers": []},
-{"name": "Язык", "domain": "Наивная теория множеств", "modifiers": []},
+{"name": "Семейство множеств", "modifiers": []},
+{"name": "Элемент множества", "modifiers": []},
+{"name": "Алфавит", "modifiers": []},
+{"name": "Буква", "modifiers": []},
+{"name": "Слово", "modifiers": []},
+{"name": "Язык", "modifiers": []},
 
 {"name": "Множество", "modifiers": []},
+{"name": "Подмножество", "modifiers": []},
 {"name": "Мультимножество", "modifiers": []},
 {"name": "Последовательность", "modifiers": []},
 
@@ -24,12 +25,27 @@
 {"name": "Характеристический предикат", "modifiers": ["algorithm"]},
 {"name": "Порождающая процедура", "modifiers": ["algorithm"]},
 
+{"name": "Булеан", "modifiers": []},
+{"name": "Покрытие", "modifiers": []},
+{"name": "Разбиение", "modifiers": []},
+
+{"name": "Добавить", "modifiers": ["algorithm"]},
+{"name": "Удалить", "modifiers": ["algorithm"]},
+{"name": "Стрелка Пирса", "modifiers": ["algorithm"]},
+{"name": "Шифр Шеффера", "modifiers": ["algorithm"]},
+{"name": "Объединение", "modifiers": ["algorithm"]},
+{"name": "Пересечение", "modifiers": ["algorithm"]},
+{"name": "Разность", "modifiers": ["algorithm"]},
+{"name": "Симметрическая разность", "modifiers": ["algorithm"]},
+
 {"type": "Realization", "name1": "Пустое множество", "name2": "Конечное множество"},
 {"type": "Inheritance", "name1": "Алфавит", "name2": "Конечное множество"},
 {"type": "Aggregation", "name1": "Буква", "name2": "Алфавит"},
 {"type": "Aggregation", "name1": "Буква", "name2": "Слово"},
 {"type": "Aggregation", "name1": "Слово", "name2": "Язык"},
 
+{"type": "Aggregation", "name1": "Элемент множества", "name2": "Множество", "multiplicity1": "*"},
+{"type": "Inheritance", "name1": "Множество", "name2": "Элемент множества"},
 {"type": "Inheritance", "name1": "Семейство множеств", "name2": "Множество"},
 {"type": "Inheritance", "name1": "Множество", "name2": "Мультимножество"},
 {"type": "Inheritance", "name1": "Мультимножество", "name2": "Последовательность"},
@@ -54,11 +70,351 @@
 {"type": "Dependency", "name1": "Алфавит", "name2": "Буква"},
 {"type": "Dependency", "name1": "Алфавит", "name2": "Конечное множество"},
 
-{"type": "Input", "name1": "Элемент", "name2": "Перенумеровать"},
+{"type": "Input", "name1": "Элемент множества", "name2": "Перенумеровать"},
 {"type": "Output", "name1": "Перенумеровать", "name2": "Конечное множество"},
 {"type": "Input", "name1": "Мультимножество", "name2": "Перенумеровать"},
 {"type": "Output", "name1": "Перенумеровать", "name2": "Последовательность"},
 
 {"type": "Output", "name1": "Характеристический предикат", "name2": "Множество"},
 {"type": "Output", "name1": "Порождающая процедура", "name2": "Множество"},
+
+{"type": "Inheritance", "name1": "Подмножество", "name2": "Множество"},
+{"type": "Association", "name1": "Множество", "name2": "Подмножество", "predicate":"включает"},
+{"type": "Composition", "name1": "Множество", "name2": "Булеан"},
+{"type": "Dependency", "name1": "Булеан", "name2": "Покрытие"},
+{"type": "Inheritance", "name1": "Разбиение", "name2": "Покрытие"},
+{"type": "Inheritance", "name1": "Покрытие", "name2": "Семейство множеств"},
+{"type": "Inheritance", "name1": "Булеан", "name2": "Семейство множеств"},
+
+
+{"type": "Input", "name1": "Элемент множества", "name2": "Добавить"},
+{"type": "Input", "name1": "Элемент множества", "name2": "Удалить"},
+{"type": "Output", "name1": "Добавить", "name2": "Множество"},
+{"type": "Output", "name1": "Удалить", "name2": "Множество"},
+{"type": "Input", "name1": "Множество", "name2": "Добавить"},
+{"type": "Input", "name1": "Множество", "name2": "Удалить"},
+
+{"type": "Output", "name1": "Стрелка Пирса", "name2": "Множество"},
+{"type": "Output", "name1": "Шифр Шеффера", "name2": "Множество"},
+{"type": "Output", "name1": "Объединение", "name2": "Множество"},
+{"type": "Output", "name1": "Пересечение", "name2": "Множество"},
+{"type": "Output", "name1": "Разность", "name2": "Множество"},
+{"type": "Output", "name1": "Симметрическая разность", "name2": "Множество"},
+
+{"type": "Input", "name1": "Множество", "name2": "Стрелка Пирса", "multiplicity1": "2"},
+{"type": "Input", "name1": "Множество", "name2": "Шифр Шеффера", "multiplicity1": "2"},
+{"type": "Input", "name1": "Множество", "name2": "Объединение", "multiplicity1": "*"},
+{"type": "Input", "name1": "Множество", "name2": "Пересечение", "multiplicity1": "*"},
+{"type": "Input", "name1": "Множество", "name2": "Разность", "multiplicity1": "2"},
+{"type": "Input", "name1": "Множество", "name2": "Симметрическая разность", "multiplicity1": "2"},
+
+{"name": "Бит", "modifiers": []},
+{"name": "Битовая шкала", "modifiers": []},
+{"name": "Односвязный список", "modifiers": []},
+{"name": "Упорядоченный список", "modifiers": []},
+{"name": "Структура", "modifiers": []},
+{"name": "Указатель", "modifiers": []},
+{"name": "Массив", "modifiers": []},
+{"name": "Итератор", "modifiers": ["algorithm"]},
+{"name": "enumeration bool", "modifiers": []},
+
+{"type": "Aggregation", "name1": "Бит", "name2": "Битовая шкала"},
+{"type": "Dependency", "name1": "Битовая шкала", "name2": "Массив"},
+{"type": "Dependency", "name1": "Битовая шкала", "name2": "enumeration bool"},
+
+{"type": "Inheritance", "name1": "Упорядоченный список", "name2": "Односвязный список"},
+{"type": "Dependency", "name1": "Односвязный список", "name2": "Структура"},
+{"type": "Dependency", "name1": "Односвязный список", "name2": "Указатель"},
+
+{"type": "Manifest", "name1": "Итератор", "name2": "Множество"},
+{"type": "Manifest", "name1": "Односвязный список", "name2": "Множество"},
+{"type": "Manifest", "name1": "Битовая шкала", "name2": "Множество"},
+
+{"name": "Тело цикла", "modifiers": ["algorithm", "abstract"]},
+{"name": "Перечисление подмножеств", "modifiers": ["algorithm", "abstract"]},
+{"name": "Бинарный код Грея", "modifiers": ["algorithm"]},
+{"name": "Операции над множествами", "modifiers": ["algorithm", "abstract"]},
+{"name": "Алгоритм слияния", "modifiers": ["algorithm", "abstract"]},
+
+{"name": "AND", "modifiers": ["algorithm"]},
+{"name": "OR", "modifiers": ["algorithm"]},
+{"name": "XOR", "modifiers": ["algorithm"]},
+{"name": "NOT", "modifiers": ["algorithm"]},
+
+{"type": "Manifest", "name1": "AND", "name2": "Пересечение"},
+{"type": "Manifest", "name1": "OR", "name2": "Объединение"},
+{"type": "Manifest", "name1": "XOR", "name2": "Симметрическая разность"},
+{"type": "Manifest", "name1": "NOT", "name2": "Разность"},
+
+{"type": "Inheritance",  "name1": "Пересечение", "name2": "Операции над множествами"},
+{"type": "Inheritance",  "name1": "Объединение", "name2": "Операции над множествами"},
+{"type": "Inheritance",  "name1": "Симметрическая разность", "name2": "Операции над множествами"},
+{"type": "Inheritance",  "name1": "Разность", "name2": "Операции над множествами"},
+
+{"type": "Input",  "name1": "Множество", "name2": "Операции над множествами", "multiplicity1":"2"},
+{"type" : "Output", "name1": "Операции над множествами", "name2": "Множество", "multiplicity2":"1"},
+
+{"type": "Input",  "name1": "Упорядоченный список", "name2": "Алгоритм слияния", "multiplicity1":"2"},
+{"type" : "Output", "name1": "Алгоритм слияния", "name2": "Упорядоченный список", "multiplicity2":"1"},
+{"type" : "Inheritance", "name1": "Бинарный код Грея", "name2": "Перечисление подмножеств"},
+{"type" : "Dependency", "name1": "Перечисление подмножеств", "name2": "Булеан"},
+{"type" : "Instance", "name1": "Тело цикла", "name2": "Итератор", "multiplicity1":"1"},
+
+{"name": "Бинарное отношение", "modifiers": []},
+{"name": "Бинарное отношение на множестве", "modifiers": []},
+{"name": "Тождественное отношение", "modifiers": []},
+{"name": "Отношение", "modifiers": []},
+{"name": "Кортеж", "modifiers": []},
+{"name": "Упорядоченная пара", "modifiers": []},
+
+{"name": "Рефлексивное отношение", "modifiers": []},
+{"name": "Антирефлексивное отношение", "modifiers": []},
+{"name": "Симметричное отношение", "modifiers": []},
+{"name": "Антисимметричное отношение", "modifiers": []},
+{"name": "Транзитивное отношение", "modifiers": []},
+{"name": "Линейное отношение", "modifiers": []},
+
+{"type" : "Inheritance", "name1": "Бинарное отношение", "name2": "Рефлексивное отношение"},
+{"type" : "Inheritance", "name1": "Бинарное отношение", "name2": "Антирефлексивное отношение"},
+{"type" : "Inheritance", "name1": "Бинарное отношение", "name2": "Симметричное отношение"},
+{"type" : "Inheritance", "name1": "Бинарное отношение", "name2": "Антисимметричное отношение"},
+{"type" : "Inheritance", "name1": "Бинарное отношение", "name2": "Транзитивное отношение"},
+{"type" : "Inheritance", "name1": "Бинарное отношение", "name2": "Линейное отношение"},
+
+{"type" : "Inheritance", "name1": "Бинарное отношение", "name2": "Отношение"},
+{"type" : "Aggregation", "name1": "Упорядоченная пара", "name2": "Бинарное отношение"},
+{"type" : "Aggregation", "name1": "Кортеж", "name2": "Отношение"},
+{"type" : "Inheritance", "name1": "Упорядоченная пара", "name2": "Кортеж"},
+{"type" : "Inheritance", "name1": "Тождественное отношение", "name2": "Бинарное отношение на множестве"},
+{"type" : "Inheritance", "name1": "Бинарное отношение на множестве", "name2": "Бинарное отношение"},
+{"type" : "Inheritance", "name1": "Бинарное отношение", "name2": "Множество"},
+{"type" : "Inheritance", "name1": "Упорядоченная пара", "name2": "Элемент множества"},
+{"type" : "Aggregation", "name1": "Элемент множества", "name2": "Упорядоченная пара", "multiplicity1":"2"},
+
+{"type" : "Association", "name1": "Бинарное отношение", "name2": "Множество", "predicate": "Dom"},
+{"type" : "Association", "name1": "Множество", "name2": "Бинарное отношение", "predicate": "Im"},
+
+{"name": "Прямая сумма", "modifiers": ["algorithm"]},
+{"name": "Прямое произведение", "modifiers": ["algorithm"]},
+{"name": "Построение множества", "modifiers": ["algorithm"]},
+{"name": "Выделение множества", "modifiers": ["algorithm"]},
+{"name": "Композиция", "modifiers": ["algorithm"]},
+{"name": "Степень", "modifiers": ["algorithm"]},
+{"name": "Ядро", "modifiers": ["algorithm"]},
+{"name": "Обратное отношение", "modifiers": ["algorithm"]},
+{"name": "Дополнение отношения", "modifiers": ["algorithm"]},
+{"name": "Декартово произведение", "modifiers": []},
+{"name": "Размеченное объединение", "modifiers": []},
+
+{"type" : "Input", "name1": "Натуральное число", "name2": "Прямая сумма", "multiplicity1":"*"},
+{"type" : "Input", "name1": "Множество", "name2": "Прямая сумма", "multiplicity1":"*"},
+{"type" : "Input", "name1": "Множество", "name2": "Прямое произведение", "multiplicity1":"*"},
+{"type" : "Output", "name1": "Прямое произведение", "name2": "Декартово произведение", "multiplicity2":"1"},
+{"type" : "Input", "name1": "Декартово произведение", "name2": "Выделение множества"},
+{"type" : "Input", "name1": "Декартово произведение", "name2": "Дополнение отношения"},
+{"type" : "Input", "name1": "Упорядоченная пара", "name2": "Построение множества"},
+{"type" : "Output", "name1": "Построение множества", "name2": "Размеченное объединение"},
+{"type" : "Output", "name1": "Выделение множества", "name2": "Отношение"},
+
+{"type" : "Inheritance", "name1": "Ядро", "name2": "Композиция"},
+{"type" : "Inheritance", "name1": "Степень", "name2": "Композиция"},
+
+{"type" : "Input", "name1": "Бинарное отношение", "name2": "Композиция", "multiplicity1":"2"},
+{"type" : "Input", "name1": "Бинарное отношение", "name2": "Обратное отношение","multiplicity1":"1"},
+{"type" : "Input", "name1": "Бинарное отношение", "name2": "Дополнение отношения","multiplicity1":"1"},
+
+{"type" : "Output", "name1": "Композиция", "name2": "Бинарное отношение", "multiplicity1":"1"},
+{"type" : "Output", "name1": "Обратное отношение", "name2": "Бинарное отношение","multiplicity1":"1"},
+{"type" : "Output", "name1": "Дополнение отношения", "name2": "Бинарное отношение","multiplicity1":"1"},
+
+{"name": "Замыкание", "modifiers": ["algorithm"]},
+{"name": "Транзитивное замыкание", "modifiers": ["algorithm"]},
+{"name": "Алгоритм Уоршалла", "modifiers": ["algorithm"]},
+{"name": "Диаграмма Хассе", "modifiers": ["algorithm"]},
+{"name": "Транзитивное сокращение", "modifiers": ["algorithm"]},
+{"name": "Сокращение Редукция", "modifiers": ["algorithm"]},
+
+{"type" : "Inheritance", "name1": "Транзитивное замыкание", "name2": "Замыкание"},
+{"type" : "Inheritance", "name1": "Транзитивное сокращение", "name2": "Сокращение Редукция"},
+{"type" : "Inheritance", "name1": "Алгоритм Уоршалла", "name2": "Транзитивное замыкание"},
+
+{"type" : "Dependency", "name1": "Транзитивное замыкание", "name2": "Бинарное отношение"},
+{"type" : "Dependency", "name1": "Диаграмма Хассе", "name2": "Бинарное отношение"},
+{"type" : "Dependency", "name1": "Транзитивное сокращение", "name2": "Бинарное отношение"},
+
+{"name": "Тотальное отношение", "modifiers": []},
+{"name": "Инъективное отношение", "modifiers": []},
+{"name": "Сюръективное отношение", "modifiers": []},
+{"name": "Функциональное отношение", "modifiers": []},
+{"name": "Функция", "modifiers": []},
+
+{"name": "Сужение", "modifiers": ["algorithm"]},
+{"name": "Расширение", "modifiers": ["algorithm"]},
+{"name": "Суперпозиция", "modifiers": ["algorithm"]},
+{"name": "Степень", "modifiers": ["algorithm"]},
+{"name": "Переход к прообразам", "modifiers": ["algorithm"]},
+{"name": "Переход к образам", "modifiers": ["algorithm"]},
+
+{"type" : "Inheritance", "name1": "Тотальное отношение", "name2": "Отношение"},
+{"type" : "Inheritance", "name1": "Инъективное отношение", "name2": "Отношение"},
+{"type" : "Inheritance", "name1": "Сюръективное отношение", "name2": "Отношение"},
+{"type" : "Inheritance", "name1": "Функциональное отношение", "name2": "Отношение"},
+{"type" : "Association", "name1": "Функция", "name2": "Функциональное отношение", "predicate": "синоним"},
+{"type" : "Inheritance", "name1": "Степень", "name2": "Суперпозиция"},
+
+{"type" : "Dependency", "name1":"Функция", "name2": "Сужение"},
+{"type" : "Dependency", "name1":"Функция", "name2": "Расширение"},
+{"type" : "Dependency", "name1":"Функция", "name2": "Суперпозиция"},
+{"type" : "Dependency", "name1":"Функция", "name2": "Степень"},
+{"type" : "Dependency", "name1":"Функция", "name2": "Переход к прообразам"},
+{"type" : "Dependency", "name1":"Функция", "name2": "Переход к образам"},
+
+{"name": "Отношение эквалентности", "modifiers": []},
+{"name": "Отношение толерантности", "modifiers": []},
+{"name": "Фактормножество", "modifiers": []},
+{"name": "Класс эквивалентности", "modifiers": []},
+
+{"type" : "Inheritance", "name1": "Отношение эквалентности", "name2": "Рефлексивное отношение"},
+{"type" : "Inheritance", "name1": "Отношение эквалентности", "name2": "Симметричное отношение"},
+{"type" : "Inheritance", "name1": "Отношение эквалентности", "name2": "Транзитивное отношение"},
+
+{"type" : "Inheritance", "name1": "Отношение эквалентности", "name2": "Рефлексивное отношение"},
+{"type" : "Association", "name1": "Множество", "name2": "Фактормножество", "predicateInv":"отождествление"},
+{"type" : "Association", "name1": "Множество", "name2": "Фактормножество", "predicate":"индуцированная функция"},
+{"type" : "Association", "name1": "Класс эквивалентности", "name2": "Множество", "predicateInv":"подмножество"},
+{"type" : "Composition", "name1": "Класс эквивалентности", "name2": "Фактормножество"},
+
+{"name": "Изоморфизм", "modifiers": []},
+{"name": "Гомоморфизм", "modifiers": []},
+{"name": "Множество", "modifiers": []},
+
+{"type" : "Inheritance", "name1": "Изоморфизм", "name2": "Биекция"},
+{"type" : "Inheritance", "name1": "Изоморфизм", "name2": "Гомоморфизм"},
+{"type" : "Association", "name1": "Гомоморфизм", "name2": "Множество", "predicate":"из"},
+{"type" : "Association", "name1": "Гомоморфизм", "name2": "Множество", "predicate":"в"},
+{"type" : "Association", "name1": "Отношение", "name2": "Отношение", "predicate":"уравнение гомоморфизма"},
+{"type" : "Association", "name1": "Отношение", "name2": "Множество", "predicate":"на"},
+
+{"name": "Предпорядок Квазипорядок", "modifiers": []},
+{"name": "Строгий предпорядок", "modifiers": []},
+{"name": "Нестрогий линейный порядок", "modifiers": []},
+{"name": "Строгий линейный порядок", "modifiers": []},
+{"name": "Нестрогий частичный порядок", "modifiers": []},
+{"name": "Строгий частичный порядок", "modifiers": []},
+{"name": "Линейный порядок", "modifiers": []},
+{"name": "Частичный порядок", "modifiers": []},
+{"name": "Полный порядок", "modifiers": []},
+{"name": "Частичное отношение", "modifiers": []},
+{"name": "Отношение порядка", "modifiers": []},
+
+{"type" : "Inheritance", "name1": "Отношение эквалентности", "name2": "Предпорядок Квазипорядок"},
+{"type" : "Inheritance", "name1": "Предпорядок Квазипорядок", "name2": "Рефлексивное отношение"},
+{"type" : "Inheritance", "name1": "Предпорядок Квазипорядок", "name2": "Транзитивное отношение"},
+
+{"type" : "Inheritance", "name1": "Строгий порядок", "name2": "Транзитивное отношение"},
+{"type" : "Inheritance", "name1": "Строгий порядок", "name2": "Антирефлексивное отношение"},
+
+{"type" : "Inheritance", "name1": "Отношение порядка", "name2": "Антисимметричное отношение"},
+{"type" : "Inheritance", "name1": "Отношение порядка", "name2": "Транзитивное отношение"},
+
+
+{"type" : "Inheritance", "name1": "Нестрогий линейный порядок", "name2": "Рефлексивное отношение"},
+{"type" : "Inheritance", "name1": "Нестрогий частичный порядок", "name2": "Рефлексивное отношение"},
+
+{"type" : "Inheritance", "name1": "Строгий линейный порядок", "name2": "Антирефлексивное отношение"},
+{"type" : "Inheritance", "name1": "Строгий частичный порядок", "name2": "Антирефлексивное отношение"},
+
+{"type" : "Inheritance", "name1": "Линейный порядок", "name2": "Отношение порядка"},
+{"type" : "Inheritance", "name1": "Частичный порядок", "name2": "Отношение порядка"},
+
+{"type" : "Inheritance", "name1": "Линейный порядок", "name2": "Линейное отношение"},
+{"type" : "Inheritance", "name1": "Частичный порядок", "name2": "Частичное отношение"},
+
+{"type" : "Inheritance", "name1": "Полный порядок", "name2": "Линейный порядок"},
+
+{"type" : "Inheritance", "name1": "Нестрогий линейный порядок", "name2": "Линейный порядок"},
+{"type" : "Inheritance", "name1": "Нестрогий частичный порядок", "name2": "Частичный порядок"},
+
+{"name": "Монотонная функция", "modifiers": []},
+{"name": "Непрерывная функция", "modifiers": []},
+
+{"name": "Монотонно возрастающая функция", "modifiers": []},
+{"name": "Строго монотонно возрастающая функция", "modifiers": []},
+{"name": "Монотонно убывающая функция", "modifiers": []},
+{"name": "Строго монотонно убывающая функция", "modifiers": []},
+
+{"name": "Алгоритм топологической сортировки", "modifiers": ["algorithm"]},
+{"name": "Индукция", "modifiers": ["algorithm"]},
+
+{"type" : "Inheritance", "name1": "Монотонно возрастающая функция", "name2": "Монотонная функция"},
+{"type" : "Inheritance", "name1": "Строго монотонно возрастающая функция", "name2": "Монотонная функция"},
+{"type" : "Inheritance", "name1": "Монотонно убывающая функция", "name2": "Монотонная функция"},
+{"type" : "Inheritance", "name1": "Строго монотонно убывающая функция", "name2": "Монотонная функция"},
+
+{"type" : "Output", "name1": "Алгоритм топологической сортировки", "name2": "Линейное отношение"},
+{"type" : "Input", "name1": "Частичное отношение", "name2": "Алгоритм топологической сортировки"},
+
+{"type" : "Inheritance", "name1": "Непрерывная функция", "name2": "Монотонно возрастающая функция"},
+{"type" : "Inheritance", "name1": "Непрерывная функция", "name2": "Функция"},
+
+{"type" : "Association", "name1": "Функция", "name2": "Множество", "predicate":"из"},
+{"type" : "Association", "name1": "Функция", "name2": "Множество", "predicate":"в"},
+
+{"type" : "Association", "name1": "Отношение порядка", "name2": "Множество", "predicate":"на"},
+
+{"name": "Вполне упорядоченное множество", "modifiers": []},
+{"type" : "Inheritance", "name1": "Вполне упорядоченное множество", "name2": "Множество"},
+
+{"type" : "Output", "name1": "Индукция", "name2": "Вполне упорядоченное множество"},
+
+
+{"name": "Наибольший элемент", "modifiers": []},
+{"name": "Максимальный элемент", "modifiers": []},
+{"name": "Минимальный элемент", "modifiers": []},
+{"name": "Наименьший элемент", "modifiers": []},
+
+{"type" : "Inheritance", "name1": "Наибольший элемент", "name2": "Максимальный элемент"},
+{"type" : "Inheritance", "name1": "Максимальный элемент", "name2": "Элемент множества"},
+
+{"type" : "Inheritance", "name1": "Наименьший элемент", "name2": "Максимальный элемент"},
+{"type" : "Inheritance", "name1": "Минимальный элемент", "name2": "Элемент множества"},
+
+{"type" : "Dependency", "name1": "Вполне упорядоченное множество", "name2": "Минимальный элемент"},
+
+{"name": "Супремум", "modifiers": []},
+{"name": "Неподвижная точка", "modifiers": []},
+{"name": "Инфимум", "modifiers": []},
+
+{"type" : "Inheritance", "name1": "Элемент множества", "name2": "Супремум" },
+{"type" : "Inheritance", "name1": "Элемент множества", "name2": "Неподвижная точка"},
+{"type" : "Inheritance", "name1": "Элемент множества", "name2": "Инфимум"},
+
+{"name": "Характеристическая функция множества", "modifiers": []},
+{"name": "Характеристическая функция отношения", "modifiers": []},
+{"name": "Бинарная функция", "modifiers": []},
+{"name": "Предикат", "modifiers": []},
+
+{"name": "Характеристическая функция", "modifiers": []},
+{"name": "Классификатор", "modifiers": []},
+{"name": "Фассетный классификатор", "modifiers": []},
+{"name": "Иерархический классификатор", "modifiers": []},
+
+{"name": "Нечёткая функция", "modifiers": []},
+{"name": "Неотрицательно целочисленная функция", "modifiers": []},
+{"name": "Характеристическая функция мультимножества", "modifiers": []},
+
+
+{"type" : "Inheritance", "name1": "Характеристическая функция множества", "name2": "Бинарная функция"},
+{"type" : "Inheritance", "name1": "Характеристическая функция отношения", "name2": "Бинарная функция"},
+{"type" : "Association", "name1": "Характеристическая функция отношения", "name2": "Предикат", "predicate":"это"},
+{"type" : "Inheritance", "name1": "Бинарная функция", "name2": "Характеристическая функция"},
+{"type" : "Inheritance", "name1": "Характеристическая функция", "name2": "Функция"},
+
+{"type" : "Inheritance", "name1": "Фассетный классификатор", "name2": "Классификатор"},
+{"type" : "Inheritance", "name1": "Иерархический классификатор", "name2": "Классификатор"},
+{"type" : "Inheritance", "name1": "Классификатор", "name2": "Характеристическая функция"},
+
+{"type" : "Inheritance", "name1": "Нечёткая функция", "name2": "Характеристическая функция"},
+{"type" : "Inheritance", "name1": "Неотрицательно целочисленная функция", "name2": "Характеристическая функция"},
+{"type" : "Inheritance", "name1": "Характеристическая функция мультимножества", "name2": "Неотрицательно целочисленная функция"}
 ]
