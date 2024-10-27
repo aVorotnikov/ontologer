@@ -136,7 +136,7 @@
         {"name": "Характеристическая функция мультимножества", "modifiers": []}
     ],  
     "relations": [
-        {"type": "Realization", "name1": "Пустое множество", "name2": "Конечное множество"},
+        {"type": "Instance", "name1": "Пустое множество", "name2": "Конечное множество"},
         {"type": "Inheritance", "name1": "Алфавит", "name2": "Конечное множество"},
         {"type": "Aggregation", "name1": "Буква", "name2": "Алфавит"},
         {"type": "Aggregation", "name1": "Буква", "name2": "Слово"},
