@@ -31,10 +31,10 @@ def insert_relation(driver, domain, relation):
         "predicate": relation["predicate"] if "predicate" in relation else "",
         "predicateInv": relation["predicateInv"] if "predicateInv" in relation else "",
         "pName1": relation["pole1"]["name"] if "pole1" in relation and "name" in relation["pole1"] else "",
-        "pMultiplicity1": relation["pole1"]["multiplicity"] if "pole1" in relation and "multiplicity" in relation["pole1"] else 1,
+        "pMultiplicity1": relation["pole1"]["multiplicity"] if "pole1" in relation and "multiplicity" in relation["pole1"] else "1",
         "pOthers1": relation["pole1"]["others"] if "pole1" in relation and "others" in relation["pole1"] else "",
         "pName2": relation["pole2"]["name"] if "pole2" in relation and "name" in relation["pole2"] else "",
-        "pMultiplicity2": relation["pole2"]["multiplicity"] if "pole2" in relation and "multiplicity" in relation["pole2"] else 1,
+        "pMultiplicity2": relation["pole2"]["multiplicity"] if "pole2" in relation and "multiplicity" in relation["pole2"] else "1",
         "pOthers2": relation["pole2"]["others"] if "pole2" in relation and "others" in relation["pole2"] else ""
     }
 
