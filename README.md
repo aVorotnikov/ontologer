@@ -9,3 +9,5 @@
 ## Ссылки
 + [Документация](docs/)
 + [Утилита наполнения базы данных](ontology_inserter/)
++ [Исходные коды бота](bot/).
++ Бот в Telegram: [@OntologerBot](https://t.me/OntologerBot)
