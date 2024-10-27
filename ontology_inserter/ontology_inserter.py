@@ -24,11 +24,30 @@ def insert_node(driver, domain, node):
 
 
 def insert_relation(driver, domain, relation):
+    args = {
+        "domain": domain,
+        "name1": relation["name1"],
+        "name2": relation["name2"],
+        "predicate": relation["predicate"] if "predicate" in relation else "",
+        "predicateInv": relation["predicateInv"] if "predicateInv" in relation else "",
+        "pName1": relation["pole1"]["name"] if "pole1" in relation and "name" in relation["pole1"] else "",
+        "pMultiplicity1": relation["pole1"]["multiplicity"] if "pole1" in relation and "multiplicity" in relation["pole1"] else 1,
+        "pOthers1": relation["pole1"]["others"] if "pole1" in relation and "others" in relation["pole1"] else "",
+        "pName2": relation["pole2"]["name"] if "pole2" in relation and "name" in relation["pole2"] else "",
+        "pMultiplicity2": relation["pole2"]["multiplicity"] if "pole2" in relation and "multiplicity" in relation["pole2"] else 1,
+        "pOthers2": relation["pole2"]["others"] if "pole2" in relation and "others" in relation["pole2"] else ""
+    }
+
     driver.execute_query(
         'MATCH (c1:Class {domain: $domain, name: $name1}) '
         'MATCH (c2:Class {domain: $domain, name: $name2}) '
-        f'CREATE (c1)-[:{relation["type"]}]->(c2)',
-        domain=domain, name1=relation["name1"], name2=relation["name2"], database_="neo4j"
+        'CREATE (c1)-['
+        f':{relation["type"]} '
+        '{predicate: $predicate, predicateInv: $predicateInv, '
+        'pName1: $pName1, pMultiplicity1: $pMultiplicity1, pOthers1: $pOthers1, '
+        'pName2: $pName2, pMultiplicity2: $pMultiplicity2, pOthers2: $pOthers2}'
+        ']->(c2)',
+        **args, database_="neo4j"
     )
 
 
@@ -45,7 +64,7 @@ if __name__ == "__main__":
     with open(args.json) as file:
         jsonDict = json.load(file)
     domain = jsonDict["domain"]
-    print(f"Domain: {domain}")
+    print(f"Предметная область: '{domain}'")
 
     uri = f"neo4j://{args.ip}:{args.port}"
     auth = (args.user, args.password)
