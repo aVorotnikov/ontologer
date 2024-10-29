@@ -53,7 +53,7 @@ def __construct_sequence_not_reverse(node1: Node, relation: Relation, node2: Nod
     elif RelationType.Input == relType:
         return f"{node1.name} является входом {__morph_string_with_case(node2.name, MorphyCase.gent)}."
     elif RelationType.Output == relType:
-        return f"{node1.name} имеет выход {MorphyCase.gent}."
+        return f"{node1.name} имеет выход {node2.name}."
     elif RelationType.Association == relType:
         return f"{node1.name} {relation.predicate} {node2.name}"
     raise TypeError(f"Unknown relation: {relType}")
@@ -76,11 +76,11 @@ def __construct_sequence_reverse(node1: Node, relation: Relation, node2: Node):
     elif RelationType.Manifest == relType:
         return f"{node1.name} воплощает {__morph_string_with_case(node2.name, MorphyCase.accs)}."
     elif RelationType.Input == relType:
-        return f"{node1.name} имеет вход {MorphyCase.gent}."
+        return f"{node1.name} имеет вход {__morph_string_with_case(node2.name, MorphyCase.gent)}."
     elif RelationType.Output == relType:
         return f"{node1.name} является выходом {__morph_string_with_case(node2.name, MorphyCase.gent)}."
     elif RelationType.Association == relType:
-        return f"{node2.name} {relation.predicateInv} {node1.name}"
+        return f"{node1.name} {relation.predicateInv} {node2.name}"
     raise TypeError(f"Unknown relation: {relType}")
 
 
