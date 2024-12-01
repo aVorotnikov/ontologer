@@ -27,6 +27,21 @@ class OntologiesConnector:
         )[0]
 
 
+    def _get_path_sequences_records(self, domain, start_name, end_name, length):
+        request = "MATCH (c0:Class {domain: $domain, name: $start_name})"
+        for i in range(1, length):
+            request += f"-[r{i}]-(c{i}:Class {{domain: $domain}})"
+        request += f"-[r{length}]-(c{length}:Class {{domain: $domain, name: $end_name}})"
+        request += " RETURN c0"
+        for i in range(1, length + 1):
+            request += f", r{i}, c{i}"
+
+        return self.driver.execute_query(
+            request, domain=domain, start_name=start_name, end_name=end_name,
+            database_="neo4j", routing_=RO_CONTROL
+        )[0]
+
+
     @staticmethod
     def _get_node(class_record):
         modifiers = []
@@ -80,6 +95,16 @@ class OntologiesConnector:
         return OntologiesConnector._record_to_sequence(record)
 
 
+    def get_path_sequences(self, domain, start_name, end_name, length = 1):
+        records = self._get_path_sequences_records(domain, start_name, end_name, length)
+        res = []
+        if len(records) == 0:
+            return res
+        for record in records:
+            res.append(OntologiesConnector._record_to_sequence(record))
+        return res
+
+
 if __name__ == "__main__":
     parser = ArgumentParser(description="Script to upload ontology to database")
     parser.add_argument("-i", "--ip", help="Database IP", default="localhost") 
@@ -94,3 +119,4 @@ if __name__ == "__main__":
     auth = (args.user, args.password)
     connector = OntologiesConnector(uri, auth)
     print(connector.get_random_sequence(args.domain))
+    print(connector.get_path_sequences(args.domain, "Множество", "Элемент множества"))
