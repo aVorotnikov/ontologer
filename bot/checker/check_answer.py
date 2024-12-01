@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from construct_sequence import construct_sequence
+from checker.construct_sequence import construct_sequence
 from llm_connector import LlmConnector
 from ontologies_connector import OntologiesConnector
 

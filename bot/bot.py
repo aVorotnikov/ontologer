@@ -2,6 +2,8 @@
 
 from llm_connector import LlmConnector
 from ontologies_connector import OntologiesConnector
+from generate_task import generate_task, generate_task_text
+from checker import check_answer
 
 import asyncio
 import logging
@@ -39,21 +41,32 @@ ontologies = OntologiesConnector(uri, auth)
 
 dp = Dispatcher()
 
+tasks = dict()
+
+
+async def ask(message: Message) -> None:
+    task = generate_task(ontologies, DOMAIN)
+    tasks[message.chat.id] = task
+    await message.answer(generate_task_text(task))
+
 
 @dp.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
-    """
-    This handler receives messages with `/start` command
-    """
-    await message.answer(f"Hello, {html.bold(message.from_user.full_name)}!")
+    await ask(message)
 
 
 @dp.message()
 async def get_answer(message: Message) -> None:
-    try:
-        await message.send_copy(chat_id=message.chat.id)
-    except TypeError:
-        await message.answer("Nice try!")
+    if message.chat.id in tasks:
+        task = tasks[message.chat.id]
+        if not message.text:
+            await message.answer("Сообщение не содержит текста")
+        else:
+            if check_answer(ontologies, llm, DOMAIN, task.source, task.destination, message.text):
+                await message.answer("Верно")
+            else:
+                await message.answer("Неверно")
+    await ask(message)
 
 
 async def main() -> None:
