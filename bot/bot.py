@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 
+from llm_connector import LlmConnector
+from ontologies_connector import OntologiesConnector
+
 import asyncio
 import logging
 import sys
@@ -11,10 +14,28 @@ from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 
-# Bot token can be obtained via https://t.me/BotFather
-TOKEN = getenv("BOT_TOKEN")
 
-# All handlers should be attached to the Router (or Dispatcher)
+DOMAIN = "Наивная теория множеств"
+
+
+TOKEN = getenv("BOT_TOKEN")
+llm = LlmConnector()
+NEO4J_IP = getenv("NEO4J_IP")
+if not NEO4J_IP:
+    NEO4J_IP = "localhost"
+NEO4J_PORT = getenv("NEO4J_PORT")
+if NEO4J_PORT:
+    NEO4J_PORT = int(NEO4J_PORT)
+else:
+    NEO4J_PORT = 7687
+NEO4J_USER = getenv("NEO4J_USER")
+if not NEO4J_USER:
+    NEO4J_USER = "neo4j"
+NEO4J_PWD = getenv("NEO4J_PWD")
+uri = f"neo4j://{NEO4J_IP}:{NEO4J_PORT}"
+auth = (NEO4J_USER, NEO4J_PWD)
+ontologies = OntologiesConnector(uri, auth)
+
 
 dp = Dispatcher()
 
@@ -24,34 +45,19 @@ async def command_start_handler(message: Message) -> None:
     """
     This handler receives messages with `/start` command
     """
-    # Most event objects have aliases for API methods that can be called in events' context
-    # For example if you want to answer to incoming message you can use `message.answer(...)` alias
-    # and the target chat will be passed to :ref:`aiogram.methods.send_message.SendMessage`
-    # method automatically or call API method directly via
-    # Bot instance: `bot.send_message(chat_id=message.chat.id, ...)`
     await message.answer(f"Hello, {html.bold(message.from_user.full_name)}!")
 
 
 @dp.message()
-async def echo_handler(message: Message) -> None:
-    """
-    Handler will forward receive a message back to the sender
-
-    By default, message handler will handle all message types (like a text, photo, sticker etc.)
-    """
+async def get_answer(message: Message) -> None:
     try:
-        # Send a copy of the received message
         await message.send_copy(chat_id=message.chat.id)
     except TypeError:
-        # But not all the types is supported to be copied so need to handle it
         await message.answer("Nice try!")
 
 
 async def main() -> None:
-    # Initialize Bot instance with default bot properties which will be passed to all API calls
     bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-
-    # And the run events dispatching
     await dp.start_polling(bot)
 
 
