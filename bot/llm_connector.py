@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 from ollama import chat
-from ollama import ChatResponse
 
 
 class LlmConnector:
