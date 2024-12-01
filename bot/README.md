@@ -6,6 +6,8 @@
 pip install -r requirements.txt
 ```
 
+Установить neo4j и Qwen 2.5.
+
 Установите следующие переменные окружения:
 * `BOT_TOKEN` - токен для доступа к боту Telegram (создаётся через [@BotFather](https://t.me/BotFather))
 * `NEO4J_IP` - IP развёрнутой базы данных neo4j. *По умолчанию 'localhost'*
