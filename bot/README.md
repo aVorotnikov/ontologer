@@ -5,3 +5,6 @@
 ```bash
 pip install -r requirements.txt
 ```
+
+Установите следующие переменные окружения:
+* `BOT_TOKEN` - токен для доступа к боту Telegram (создаётся через [@BotFather](https://t.me/BotFather))
