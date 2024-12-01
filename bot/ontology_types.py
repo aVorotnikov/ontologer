@@ -36,7 +36,7 @@ class Pole:
 
 
 class Relation:
-    def __init__(self, type: RelationType, predicate = "", predicateInv = "", pole1 = Pole(), pole2: Pole = Pole(), reverse=False):
+    def __init__(self, type: RelationType, predicate = "", predicateInv = "", pole1 = Pole(), pole2 = Pole(), reverse=False):
         self.type = type
         self.predicate = predicate
         self.predicateInv = predicateInv
