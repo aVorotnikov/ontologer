@@ -29,7 +29,8 @@ CREATE TABLE Assessments (
     assessment_id TEXT PRIMARY KEY,
     student_login TEXT REFERENCES Students(student_login),
     assessement_type TEXT REFERENCES AssessmentTypes(assessement_type),
-    domain_label TEXT REFERENCES Domains(domain_label)
+    domain_label TEXT REFERENCES Domains(domain_label),
+    assessment_start TIMESTAMP NOT NULL
 );
 
 DROP TABLE IF EXISTS Tasks CASCADE;
