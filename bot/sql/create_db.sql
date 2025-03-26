@@ -38,6 +38,7 @@ CREATE TABLE Tasks (
     task_id SERIAL PRIMARY KEY,
     assessment_id TEXT REFERENCES Assessments(assessment_id),
     task_number INTEGER NOT NULL,
+    task_question TEXT NOT NULL,
     task_start TIMESTAMP NOT NULL,
     task_end TIMESTAMP NOT NULL,
     task_passed BOOLEAN NOT NULL,
