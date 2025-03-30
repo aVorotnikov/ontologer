@@ -20,7 +20,7 @@ from aiogram.types import Message
 DOMAIN = "Наивная теория множеств"
 
 
-TOKEN = getenv("BOT_TOKEN")
+BOT_TOKEN = getenv("BOT_TOKEN")
 llm = LlmConnector()
 NEO4J_IP = getenv("NEO4J_IP")
 if not NEO4J_IP:
@@ -34,9 +34,29 @@ NEO4J_USER = getenv("NEO4J_USER")
 if not NEO4J_USER:
     NEO4J_USER = "neo4j"
 NEO4J_PWD = getenv("NEO4J_PWD")
-uri = f"neo4j://{NEO4J_IP}:{NEO4J_PORT}"
-auth = (NEO4J_USER, NEO4J_PWD)
-ontologies = OntologiesConnector(uri, auth)
+if not NEO4J_PWD:
+    NEO4J_PWD = "aaaaaa"
+DB_NAME = getenv("DB_NAME")
+if not DB_NAME:
+    DB_NAME = "ontologer"
+DB_USER = getenv("DB_USER")
+if not DB_USER:
+    DB_USER = "postgres"
+DB_PASSWORD = getenv("DB_PASSWORD")
+if not DB_PASSWORD:
+    DB_PASSWORD = "aaaaaa"
+DB_HOST = getenv("DB_HOST")
+if not DB_HOST:
+    DB_HOST = "localhost"
+DB_PORT = getenv("DB_PORT")
+if DB_PORT:
+    DB_PORT = int(DB_PORT)
+else:
+    DB_PORT = 5432
+
+neo4j_uri = f"neo4j://{NEO4J_IP}:{NEO4J_PORT}"
+neo4j_auth = (NEO4J_USER, NEO4J_PWD)
+ontologies = OntologiesConnector(neo4j_uri, neo4j_auth)
 
 
 dp = Dispatcher()
@@ -70,7 +90,7 @@ async def get_answer(message: Message) -> None:
 
 
 async def main() -> None:
-    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     await dp.start_polling(bot)
 
 
