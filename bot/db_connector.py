@@ -12,6 +12,12 @@ class DbConnector:
         self.driver = psycopg.connect(dbname=name, user=user, password=password, host=host, port=port, autocommit=True)
 
 
+    def get_user(self, login):
+        with self.driver.cursor() as cursor:
+            cursor.execute("SELECT student_login, student_name, group_number from Students")
+            return cursor.fetchall()
+
+
     def insert_domains(self, domains):
         with self.driver.cursor() as cursor:
             for domain in domains:
@@ -21,7 +27,7 @@ class DbConnector:
     def get_groups(self):
         with self.driver.cursor() as cursor:
             cursor.execute("SELECT group_number from Groups")
-            return cursor.fetchall()
+            return [record[0] for record in cursor.fetchall()]
 
 
     def insert_student(self, login, name, group):
@@ -73,9 +79,10 @@ class DbConnector:
 if __name__ == "__main__":
     db = DbConnector("ontologer", "postgres", "aaaaaa", "localhost", 5432)
     db.insert_domains(["Наивная теория множеств"])
-    db.insert_student("ivanov", "Иванов", "5040102/90201")
+    print("Users: {}".format(db.get_user("ivanov")))
+    db.insert_student("ivanov", "Иванов", "5040102/30201")
     assessment_id = db.insert_assessment("ivanov", AssessmentType.FreeChoice, "Наивная теория множеств")
     print(f"Assessment {assessment_id}")
     print("Task {}".format(db.insert_task(assessment_id, 1, "Пупу?", datetime.datetime.now(), True, {"a": 214, "b": "c"})))
-    print("Assessments: {}", db.get_assessments("ivanov"))
-    print("Tasks: {}", db.get_tasks(assessment_id))
+    print("Assessments: {}".format(db.get_assessments("ivanov")))
+    print("Tasks: {}".format(db.get_tasks(assessment_id)))
