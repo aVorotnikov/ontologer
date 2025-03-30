@@ -19,17 +19,16 @@ INSERT INTO AssessmentTypes (assessement_type) VALUES ('test'), ('free_choice');
 
 DROP TABLE IF EXISTS Domains CASCADE;
 CREATE TABLE Domains (
-    domain_label TEXT PRIMARY KEY,
-    domain_name TEXT NOT NULL
+    domain_name TEXT PRIMARY KEY
 );
-INSERT INTO Domains (domain_label, domain_name) VALUES ('set_theory', 'Наивная теория множеств');
+INSERT INTO Domains (domain_name) VALUES ('Наивная теория множеств');
 
 DROP TABLE IF EXISTS Assessments CASCADE;
 CREATE TABLE Assessments (
     assessment_id TEXT PRIMARY KEY,
     student_login TEXT REFERENCES Students(student_login),
     assessement_type TEXT REFERENCES AssessmentTypes(assessement_type),
-    domain_label TEXT REFERENCES Domains(domain_label),
+    domain_name TEXT REFERENCES Domains(domain_name),
     assessment_start TIMESTAMP NOT NULL
 );
 
