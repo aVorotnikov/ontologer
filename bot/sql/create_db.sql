@@ -21,7 +21,6 @@ DROP TABLE IF EXISTS Domains CASCADE;
 CREATE TABLE Domains (
     domain_name TEXT PRIMARY KEY
 );
-INSERT INTO Domains (domain_name) VALUES ('Наивная теория множеств');
 
 DROP TABLE IF EXISTS Assessments CASCADE;
 CREATE TABLE Assessments (

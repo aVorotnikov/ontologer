@@ -52,7 +52,7 @@ psql -U postgres -d ontologer
 * `NEO4J_PWD` - пароль пользователя развёрнутой базы данных neo4j. *По умолчанию 'aaaaaa'*
 * `DB_NAME` - имя развёрнутой базы данных PostgreSQL. *По умолчанию 'ontologer'*
 * `DB_USER` - пользователь развёрнутой базы данных PostgreSQL. *По умолчанию 'postgres'*
-* `DB_PASSWORD` - пароль пользователя развёрнутой базы данных PostgreSQL. *По умолчанию 'aaaaaa'*
+* `DB_PWD` - пароль пользователя развёрнутой базы данных PostgreSQL. *По умолчанию 'aaaaaa'*
 * `DB_HOST` - IP развёрнутой базы данных PostgreSQL. *По умолчанию 'localhost'*
 * `DB_PORT` - порт развёрнутой базы данных PostgreSQL. *По умолчанию '5432'*
 
