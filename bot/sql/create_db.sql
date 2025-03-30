@@ -24,7 +24,7 @@ CREATE TABLE Domains (
 
 DROP TABLE IF EXISTS Assessments CASCADE;
 CREATE TABLE Assessments (
-    assessment_id TEXT PRIMARY KEY,
+    assessment_id SERIAL PRIMARY KEY,
     student_login TEXT REFERENCES Students(student_login),
     assessement_type TEXT REFERENCES AssessmentTypes(assessement_type),
     domain_name TEXT REFERENCES Domains(domain_name),
@@ -34,7 +34,7 @@ CREATE TABLE Assessments (
 DROP TABLE IF EXISTS Tasks CASCADE;
 CREATE TABLE Tasks (
     task_id SERIAL PRIMARY KEY,
-    assessment_id TEXT REFERENCES Assessments(assessment_id),
+    assessment_id INTEGER REFERENCES Assessments(assessment_id),
     task_number INTEGER NOT NULL,
     task_question TEXT NOT NULL,
     task_start TIMESTAMP NOT NULL,
