@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS Groups CASCADE;
 CREATE TABLE Groups (
     group_number TEXT PRIMARY KEY
 );
-INSERT INTO Groups (group_number) VALUES ('unknown');
+INSERT INTO Groups (group_number) VALUES ('Нет подходящей');
 
 DROP TABLE IF EXISTS Students CASCADE;
 CREATE TABLE Students (

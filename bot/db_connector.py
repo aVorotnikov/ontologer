@@ -33,7 +33,7 @@ class DbConnector:
     def insert_student(self, login, name, group):
         groups = self.get_groups()
         if group not in groups:
-            group = "unknown"
+            group = "Нет подходящей"
         with self.driver.cursor() as cursor:
             cursor.execute("INSERT INTO Students "
                 "(student_login, student_name, group_number) VALUES (%s, %s, %s) "
