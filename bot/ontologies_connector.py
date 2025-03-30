@@ -105,6 +105,12 @@ class OntologiesConnector:
         return res
 
 
+    def get_domains(self):
+        request = "MATCH (o:Class) RETURN COUNT(o.domain), o.domain ORDER BY o.domain DESC;"
+        result = self.driver.execute_query(request, database_="neo4j", routing_=RO_CONTROL)[0]
+        return [record[1] for record in result]
+
+
 if __name__ == "__main__":
     parser = ArgumentParser(description="Script to upload ontology to database")
     parser.add_argument("-i", "--ip", help="Database IP", default="localhost") 
@@ -118,5 +124,6 @@ if __name__ == "__main__":
     uri = f"neo4j://{args.ip}:{args.port}"
     auth = (args.user, args.password)
     connector = OntologiesConnector(uri, auth)
+    print(f"Domains: {connector.get_domains()}")
     print(connector.get_random_sequence(args.domain))
     print(connector.get_path_sequences(args.domain, "Множество", "Элемент множества"))
