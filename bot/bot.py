@@ -6,6 +6,9 @@ from db_connector import DbConnector
 from generate_task import generate_task, generate_task_text
 from checker import check_answer
 
+from keyboards import *
+from states import *
+
 import asyncio
 import logging
 import sys
@@ -14,8 +17,15 @@ from os import getenv
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from aiogram.filters import CommandStart
+from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
+
+
+INFO_TEXT = '''
+/name Сменить имя
+/group Сменить группу
+'''
 
 
 DOMAIN = "Наивная теория множеств"
@@ -74,13 +84,82 @@ tasks = dict()
 
 async def ask(message: Message) -> None:
     task = generate_task(ontologies, DOMAIN)
-    tasks[message.chat.id] = task
+    tasks[message.chat.iАd] = task
     await message.answer(generate_task_text(task))
 
 
+async def proccess_login(message: Message, state: FSMContext):
+    user = message.from_user
+    if not user:
+        await message.answer("Не могу определить имя пользователя")
+        return
+    await state.update_data(login=user.username)
+    users = db.get_student(user.username)
+    if 0 == len(users):
+        await state.set_state(Registration.name)
+        await message.answer("Введите имя")
+    elif 1 == len(users):
+        await state.update_data(name=users[0][1])
+        await state.update_data(group=users[0][2])
+        await message.answer(f"Привет {users[0][1]}!")
+        await send_info(message)
+    else:
+        await message.answer("Внутренняя ошибка")
+
+
+async def send_info(message: Message) -> None:
+    await message.answer(INFO_TEXT)
+
+
 @dp.message(CommandStart())
-async def command_start_handler(message: Message) -> None:
-    await ask(message)
+async def command_start_handler(message: Message, state: FSMContext) -> None:
+    await proccess_login(message, state)
+
+
+@dp.message(Command('name'))
+async def change_name(message: Message, state: FSMContext) -> None:
+    await state.set_state(ChangeName.name)
+    await message.answer("Введите имя")
+
+
+@dp.message(ChangeName.name)
+async def change_name_final(message: Message, state: FSMContext) -> None:
+    data = await state.get_data()
+    name = message.text
+    db.insert_student(data["login"],name, data["group"])
+    await proccess_login(message, state)
+    await state.set_state(state=None)
+
+
+@dp.message(Registration.name)
+async def registration_set_name(message: Message, state: FSMContext) -> None:
+    await state.update_data(name=message.text)
+    await state.set_state(Registration.group)
+    await message.answer("Выберите группу", reply_markup=create_keyboard(db.get_groups()))
+
+
+@dp.message(Command('group'))
+async def change_group(message: Message, state: FSMContext) -> None:
+    await state.set_state(ChangeGroup.group)
+    await message.answer("Выберите группу", reply_markup=create_keyboard(db.get_groups()))
+
+
+@dp.message(ChangeGroup.group)
+async def change_group_final(message: Message, state: FSMContext) -> None:
+    data = await state.get_data()
+    group = message.text
+    db.insert_student(data["login"], data["name"], group)
+    await proccess_login(message, state)
+    await state.set_state(state=None)
+
+
+@dp.message(Registration.group)
+async def registration_set_group(message: Message, state: FSMContext) -> None:
+    data = await state.get_data()
+    group = message.text
+    db.insert_student(data["login"], data["name"], group)
+    await proccess_login(message, state)
+    await state.set_state(state=None)
 
 
 @dp.message()
@@ -89,11 +168,10 @@ async def get_answer(message: Message) -> None:
         task = tasks[message.chat.id]
         if not message.text:
             await message.answer("Сообщение не содержит текста")
+        elif check_answer(ontologies, llm, DOMAIN, task.source, task.destination, message.text):
+            await message.answer("Верно")
         else:
-            if check_answer(ontologies, llm, DOMAIN, task.source, task.destination, message.text):
-                await message.answer("Верно")
-            else:
-                await message.answer("Неверно")
+            await message.answer("Неверно")
     await ask(message)
 
 

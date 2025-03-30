@@ -12,9 +12,9 @@ class DbConnector:
         self.driver = psycopg.connect(dbname=name, user=user, password=password, host=host, port=port, autocommit=True)
 
 
-    def get_user(self, login):
+    def get_student(self, login):
         with self.driver.cursor() as cursor:
-            cursor.execute("SELECT student_login, student_name, group_number from Students")
+            cursor.execute("SELECT student_login, student_name, group_number from Students WHERE student_login=%s", (login,))
             return cursor.fetchall()
 
 
@@ -79,7 +79,7 @@ class DbConnector:
 if __name__ == "__main__":
     db = DbConnector("ontologer", "postgres", "aaaaaa", "localhost", 5432)
     db.insert_domains(["Наивная теория множеств"])
-    print("Users: {}".format(db.get_user("ivanov")))
+    print("Users: {}".format(db.get_student("ivanov")))
     db.insert_student("ivanov", "Иванов", "5040102/30201")
     assessment_id = db.insert_assessment("ivanov", AssessmentType.FreeChoice, "Наивная теория множеств")
     print(f"Assessment {assessment_id}")
