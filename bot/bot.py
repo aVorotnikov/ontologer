@@ -86,19 +86,30 @@ async def proccess_login(message: Message, state: FSMContext):
     user = message.from_user
     if not user:
         await message.answer("Не могу определить имя пользователя")
-        return
+        return False
     await state.update_data(login=user.username)
     users = db.get_student(user.username)
     if 0 == len(users):
         await state.set_state(Registration.name)
         await message.answer("Введите имя")
+        return False
     elif 1 == len(users):
         await state.update_data(name=users[0][1])
         await state.update_data(group=users[0][2])
         await message.answer(f"Привет, {users[0][1]}!")
-        await send_info(message)
+        return True
     else:
         await message.answer("Внутренняя ошибка")
+        return False
+
+
+async def get_data(message: Message, state: FSMContext):
+    data = await state.get_data()
+    if "login" not in data or "name" not in data or "group" not in data:
+        if not await proccess_login(message, state):
+            raise RuntimeError("User need login")
+        return await state.get_data()
+    return data
 
 
 async def send_info(message: Message) -> None:
@@ -107,7 +118,8 @@ async def send_info(message: Message) -> None:
 
 @dp.message(CommandStart())
 async def command_start_handler(message: Message, state: FSMContext) -> None:
-    await proccess_login(message, state)
+    if await proccess_login(message, state):
+        await send_info(message)
 
 
 @dp.message(Command('name'))
@@ -118,7 +130,7 @@ async def change_name(message: Message, state: FSMContext) -> None:
 
 @dp.message(ChangeName.name)
 async def change_name_final(message: Message, state: FSMContext) -> None:
-    data = await state.get_data()
+    data = await get_data(message, state)
     name = message.text
     db.insert_student(data["login"],name, data["group"])
     await proccess_login(message, state)
@@ -140,7 +152,7 @@ async def change_group(message: Message, state: FSMContext) -> None:
 
 @dp.message(ChangeGroup.group)
 async def change_group_final(message: Message, state: FSMContext) -> None:
-    data = await state.get_data()
+    data = await get_data(message, state)
     group = message.text
     db.insert_student(data["login"], data["name"], group)
     await proccess_login(message, state)
@@ -190,7 +202,7 @@ async def set_assessment_type(message: Message, state: FSMContext) -> None:
             reply_markup=create_keyboard([assessement_type_to_string(assessment_type) for assessment_type in AssessmentType]))
         return
     await state.update_data(assessment_type=assessment_type)
-    data = await state.get_data()
+    data = await get_data(message, state)
     domain = data["assessment_domain"]
     assessment_id=db.insert_assessment(data["login"], assessment_type, domain)
     await state.update_data(assessment_id=assessment_id)
@@ -201,7 +213,7 @@ async def set_assessment_type(message: Message, state: FSMContext) -> None:
 
 @dp.message(Assessment.tasks)
 async def get_answer(message: Message, state: FSMContext) -> None:
-    data = await state.get_data()
+    data = await get_data(message, state)
     domain = data["assessment_domain"]
     if message.chat.id in tasks:
         task = tasks[message.chat.id]
