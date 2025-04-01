@@ -192,8 +192,10 @@ async def set_assessment_type(message: Message, state: FSMContext) -> None:
     await state.update_data(assessment_type=assessment_type)
     data = await state.get_data()
     domain = data["assessment_domain"]
-    await state.update_data(assessment_id=db.insert_assessment(data["login"], assessment_type, domain))
+    assessment_id=db.insert_assessment(data["login"], assessment_type, domain)
+    await state.update_data(assessment_id=assessment_id)
     await state.set_state(Assessment.tasks)
+    await message.answer(f"Начат контроль знаний \#`{assessment_id}`", parse_mode='MarkdownV2')
     await ask(message, domain)
 
 
