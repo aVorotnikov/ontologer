@@ -14,3 +14,9 @@ class ChangeGroup(StatesGroup):
 
 class ChangeName(StatesGroup):
     name = State()
+
+
+class Assessment(StatesGroup):
+    domain = State()
+    type = State()
+    tasks = State()

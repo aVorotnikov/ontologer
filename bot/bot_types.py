@@ -16,6 +16,14 @@ def assessement_type_to_string(type: AssessmentType):
     return "Неизвестно"
 
 
+def string_to_assessment_type(str):
+    if str == assessement_type_to_string(AssessmentType.Test):
+        return AssessmentType.Test
+    if str == assessement_type_to_string(AssessmentType.FreeChoice):
+        return AssessmentType.FreeChoice
+    raise ValueError(f"Unknown assessment: {str}")
+
+
 class ContestationType(Enum):
     Unprocessed = "unprocessed"
     Rejected = "rejected"

@@ -5,6 +5,7 @@ from ontologies_connector import OntologiesConnector
 from db_connector import DbConnector
 from generate_task import generate_task, generate_task_text
 from checker import check_answer
+from bot_types import *
 
 from keyboards import *
 from states import *
@@ -25,10 +26,8 @@ from aiogram.fsm.context import FSMContext
 INFO_TEXT = '''
 /name Сменить имя
 /group Сменить группу
+/assessment Начать контроль знаний
 '''
-
-
-DOMAIN = "Наивная теория множеств"
 
 
 BOT_TOKEN = getenv("BOT_TOKEN")
@@ -74,18 +73,13 @@ ontologies = OntologiesConnector(neo4j_uri, neo4j_auth)
 db = DbConnector(DB_NAME, DB_USER, DB_PWD, DB_HOST, DB_PORT)
 
 # Синхронизация базы данных и системы хранения онтологий
-db.insert_domains(ontologies.get_domains())
+domains = ontologies.get_domains()
+db.insert_domains(domains)
 
 
 dp = Dispatcher()
 
 tasks = dict()
-
-
-async def ask(message: Message) -> None:
-    task = generate_task(ontologies, DOMAIN)
-    tasks[message.chat.iАd] = task
-    await message.answer(generate_task_text(task))
 
 
 async def proccess_login(message: Message, state: FSMContext):
@@ -101,7 +95,7 @@ async def proccess_login(message: Message, state: FSMContext):
     elif 1 == len(users):
         await state.update_data(name=users[0][1])
         await state.update_data(group=users[0][2])
-        await message.answer(f"Привет {users[0][1]}!")
+        await message.answer(f"Привет, {users[0][1]}!")
         await send_info(message)
     else:
         await message.answer("Внутренняя ошибка")
@@ -162,17 +156,60 @@ async def registration_set_group(message: Message, state: FSMContext) -> None:
     await state.set_state(state=None)
 
 
-@dp.message()
-async def get_answer(message: Message) -> None:
+@dp.message(Command('assessment'))
+async def start_assessment(message: Message, state: FSMContext) -> None:
+    await state.set_state(Assessment.domain)
+    await message.answer("Выберите предметную область", reply_markup=create_keyboard(domains))
+
+
+@dp.message(Assessment.domain)
+async def set_assessment_domain(message: Message, state: FSMContext) -> None:
+    if message.text not in domains:
+        await message.answer("Неизвестная предметная область. Повторите выбор", reply_markup=create_keyboard(domains))
+        return
+    await state.update_data(assessment_domain=message.text)
+    await state.set_state(Assessment.type)
+    await message.answer(
+        "Выберите тип оценивания",
+        reply_markup=create_keyboard([assessement_type_to_string(assessment_type) for assessment_type in AssessmentType]))
+
+
+async def ask(message: Message, domain) -> None:
+    task = generate_task(ontologies, domain)
+    tasks[message.chat.id] = task
+    await message.answer(generate_task_text(task))
+
+
+@dp.message(Assessment.type)
+async def set_assessment_type(message: Message, state: FSMContext) -> None:
+    try:
+        assessment_type = string_to_assessment_type(message.text)
+    except ValueError:
+        await message.answer(
+            "Неизвестный тип. Повторите выбор",
+            reply_markup=create_keyboard([assessement_type_to_string(assessment_type) for assessment_type in AssessmentType]))
+        return
+    await state.update_data(assessment_type=assessment_type)
+    data = await state.get_data()
+    domain = data["assessment_domain"]
+    await state.update_data(assessment_id=db.insert_assessment(data["login"], assessment_type, domain))
+    await state.set_state(Assessment.tasks)
+    await ask(message, domain)
+
+
+@dp.message(Assessment.tasks)
+async def get_answer(message: Message, state: FSMContext) -> None:
+    data = await state.get_data()
+    domain = data["assessment_domain"]
     if message.chat.id in tasks:
         task = tasks[message.chat.id]
         if not message.text:
             await message.answer("Сообщение не содержит текста")
-        elif check_answer(ontologies, llm, DOMAIN, task.source, task.destination, message.text):
+        elif check_answer(ontologies, llm, domain, task.source, task.destination, message.text):
             await message.answer("Верно")
         else:
             await message.answer("Неверно")
-    await ask(message)
+    await ask(message, domain)
 
 
 async def main() -> None:
