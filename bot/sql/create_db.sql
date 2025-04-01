@@ -41,7 +41,7 @@ CREATE TABLE Tasks (
     task_end TIMESTAMP NOT NULL,
     task_passed BOOLEAN NOT NULL,
     task_challenged BOOLEAN NOT NULL,
-    task_info JSON NOT NULL,
+    task_info JSONB NOT NULL,
     UNIQUE (assessment_id, task_number)
 );
 
