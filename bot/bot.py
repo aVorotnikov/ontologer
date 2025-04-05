@@ -22,12 +22,14 @@ from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
+import aiogram.utils.formatting as formatting
 
 
 INFO_TEXT = '''
 /name Сменить имя
 /group Сменить группу
 /assessment Начать контроль знаний
+/stat Получить статистику по заданиям
 '''
 
 
@@ -225,6 +227,36 @@ async def get_answer(message: Message, state: FSMContext) -> None:
         else:
             await message.answer("Неверно")
     await ask(message, domain)
+
+
+@dp.message(Command('stat'))
+async def get_stat(message: Message, state: FSMContext) -> None:
+    data = await get_data(message, state)
+    stat = db.get_stat(data["login"])
+    if 0 == len(stat):
+        await message.answer("Задания не найдены")
+        return
+    formatting_list = [formatting.Bold("Результаты")]
+    passed = 0
+    challenged = 0
+    total = 0
+    for stat_for_type in stat:
+        formatting_list.append(formatting.as_marked_section(
+            formatting.Underline(assessment_type_to_string(AssessmentType(stat_for_type[0]))),
+            formatting.as_key_value("Зачтены", stat_for_type[1]),
+            formatting.as_key_value("Аппелированы", stat_for_type[2]),
+            formatting.as_key_value("Всего", stat_for_type[3])
+        ))
+        passed += stat_for_type[1]
+        challenged += stat_for_type[2]
+        total += stat_for_type[3]
+    formatting_list.append(formatting.as_marked_section(
+        formatting.Underline("Всего"),
+        formatting.as_key_value("Зачтены", passed),
+        formatting.as_key_value("Аппелированы", challenged),
+        formatting.as_key_value("Всего", total)
+    ))
+    await message.answer(**formatting.as_list(*formatting_list).as_kwargs())
 
 
 async def main() -> None:
