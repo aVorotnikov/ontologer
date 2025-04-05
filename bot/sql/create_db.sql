@@ -13,9 +13,9 @@ CREATE TABLE Students (
 
 DROP TABLE IF EXISTS AssessmentTypes CASCADE;
 CREATE TABLE AssessmentTypes (
-    assessement_type TEXT PRIMARY KEY
+    assessment_type TEXT PRIMARY KEY
 );
-INSERT INTO AssessmentTypes (assessement_type) VALUES ('test'), ('free_choice');
+INSERT INTO AssessmentTypes (assessment_type) VALUES ('test'), ('free_choice');
 
 DROP TABLE IF EXISTS Domains CASCADE;
 CREATE TABLE Domains (
@@ -26,7 +26,7 @@ DROP TABLE IF EXISTS Assessments CASCADE;
 CREATE TABLE Assessments (
     assessment_id SERIAL PRIMARY KEY,
     student_login TEXT REFERENCES Students(student_login),
-    assessement_type TEXT REFERENCES AssessmentTypes(assessement_type),
+    assessment_type TEXT REFERENCES AssessmentTypes(assessment_type),
     domain_name TEXT REFERENCES Domains(domain_name),
     assessment_start TIMESTAMP NOT NULL
 );

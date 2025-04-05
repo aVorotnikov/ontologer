@@ -8,7 +8,7 @@ class AssessmentType(Enum):
     FreeChoice = "free_choice"
 
 
-def assessement_type_to_string(type: AssessmentType):
+def assessment_type_to_string(type: AssessmentType):
     if type == AssessmentType.Test:
         return "Тест"
     if type == AssessmentType.FreeChoice:
@@ -17,9 +17,9 @@ def assessement_type_to_string(type: AssessmentType):
 
 
 def string_to_assessment_type(str):
-    if str == assessement_type_to_string(AssessmentType.Test):
+    if str == assessment_type_to_string(AssessmentType.Test):
         return AssessmentType.Test
-    if str == assessement_type_to_string(AssessmentType.FreeChoice):
+    if str == assessment_type_to_string(AssessmentType.FreeChoice):
         return AssessmentType.FreeChoice
     raise ValueError(f"Unknown assessment: {str}")
 

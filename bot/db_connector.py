@@ -45,7 +45,7 @@ class DbConnector:
     def insert_assessment(self, login, type: AssessmentType, domain):
         with self.driver.cursor() as cursor:
             cursor.execute("INSERT INTO Assessments "
-                "(student_login, assessement_type, domain_name, assessment_start) "
+                "(student_login, assessment_type, domain_name, assessment_start) "
                 "VALUES (%s, %s, %s, CURRENT_TIMESTAMP) "
                 "RETURNING assessment_id",
                 (login, type.value, domain))
@@ -76,6 +76,22 @@ class DbConnector:
             return cursor.fetchall()
 
 
+    def get_stat(self, login):
+        with self.driver.cursor() as cursor:
+            cursor.execute(
+                "SELECT "
+                "Assessments.assessment_type, "
+                "COUNT(*) FILTER (WHERE task_passed), "
+                "COUNT(*) FILTER (WHERE task_challenged), "
+                "COUNT(*) "
+                "FROM Tasks "
+                "LEFT JOIN Assessments ON Tasks.assessment_id=Assessments.assessment_id "
+                "WHERE Assessments.student_login=%s "
+                "GROUP BY Assessments.assessment_type",
+                (login,))
+            return cursor.fetchall()
+
+
 if __name__ == "__main__":
     db = DbConnector("ontologer", "postgres", "aaaaaa", "localhost", 5432)
     db.insert_domains(["Наивная теория множеств"])
@@ -86,3 +102,4 @@ if __name__ == "__main__":
     print("Task {}".format(db.insert_task(assessment_id, 1, "Пупу?", datetime.datetime.now(), True, {"a": 214, "b": "c"})))
     print("Assessments: {}".format(db.get_assessments("ivanov")))
     print("Tasks: {}".format(db.get_tasks(assessment_id)))
+    print("Stat: {}".format(db.get_stat("ivanov")))

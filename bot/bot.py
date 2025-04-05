@@ -14,6 +14,7 @@ import asyncio
 import logging
 import sys
 from os import getenv
+from datetime import datetime
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
@@ -183,7 +184,7 @@ async def set_assessment_domain(message: Message, state: FSMContext) -> None:
     await state.set_state(Assessment.type)
     await message.answer(
         "Выберите тип оценивания",
-        reply_markup=create_keyboard([assessement_type_to_string(assessment_type) for assessment_type in AssessmentType]))
+        reply_markup=create_keyboard([assessment_type_to_string(assessment_type) for assessment_type in AssessmentType]))
 
 
 async def ask(message: Message, domain) -> None:
@@ -199,7 +200,7 @@ async def set_assessment_type(message: Message, state: FSMContext) -> None:
     except ValueError:
         await message.answer(
             "Неизвестный тип. Повторите выбор",
-            reply_markup=create_keyboard([assessement_type_to_string(assessment_type) for assessment_type in AssessmentType]))
+            reply_markup=create_keyboard([assessment_type_to_string(assessment_type) for assessment_type in AssessmentType]))
         return
     await state.update_data(assessment_type=assessment_type)
     data = await get_data(message, state)
