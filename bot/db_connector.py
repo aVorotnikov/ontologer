@@ -69,10 +69,14 @@ class DbConnector:
             return cursor.fetchall()
 
 
-    def get_tasks(self, assessment_id):
+    def get_tasks(self, assessment_id, login):
         with self.driver.cursor() as cursor:
-            cursor.execute("SELECT task_number, task_start, task_end, task_passed, task_challenged FROM Tasks WHERE assessment_id=%s",
-                (assessment_id,))
+            cursor.execute(
+                "SELECT task_number, task_start, task_end, task_passed, task_challenged "
+                "FROM Tasks "
+                "LEFT JOIN Assessments ON Tasks.assessment_id=Assessments.assessment_id "
+                "WHERE Tasks.assessment_id=%s AND Assessments.student_login=%s",
+                (assessment_id, login))
             return cursor.fetchall()
 
 
@@ -118,6 +122,7 @@ if __name__ == "__main__":
     print(f"Assessment {assessment_id}")
     print("Task {}".format(db.insert_task(assessment_id, 1, "Пупу?", datetime.datetime.now(), True, {"a": 214, "b": "c"})))
     print("Assessments: {}".format(db.get_assessments("ivanov")))
-    print("Tasks: {}".format(db.get_tasks(assessment_id)))
+    print("Tasks: {}".format(db.get_tasks(assessment_id, "ivanov")))
+    print("Tasks (incorrect login): {}".format(db.get_tasks(assessment_id, "notivanov")))
     print("Stat: {}".format(db.get_stat("ivanov")))
     print("Stat domains: {}".format(db.get_stat_domains("ivanov")))
