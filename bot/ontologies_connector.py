@@ -42,6 +42,19 @@ class OntologiesConnector:
         )[0]
 
 
+    def _get_vicinity_records(self, domain, start_name, length):
+        request = "MATCH (c0:Class {domain: $domain, name: $start_name})"
+        for i in range(1, length + 1):
+            request += f"-[r{i}]-(c{i}:Class {{domain: $domain}})"
+        request += " RETURN c0"
+        for i in range(1, length + 1):
+            request += f", r{i}, c{i}"
+
+        return self.driver.execute_query(
+            request, domain=domain, start_name=start_name, database_="neo4j", routing_=RO_CONTROL
+        )[0]
+
+
     @staticmethod
     def _get_node(class_record):
         modifiers = []
@@ -105,6 +118,23 @@ class OntologiesConnector:
         return res
 
 
+    def get_random_term(self, domain):
+        terms = self._get_sequences_records(domain, 0)
+        if len(terms) == 0:
+            return None
+        return OntologiesConnector._get_node(terms[random.randrange(len(terms))][0])
+
+
+    def get_vicinity(self, domain, name, length = 1):
+        records = self._get_vicinity_records(domain, name, length)
+        res = []
+        if len(records) == 0:
+            return res
+        for record in records:
+            res.append(OntologiesConnector._record_to_sequence(record))
+        return res
+
+
     def get_domains(self):
         request = "MATCH (o:Class) RETURN COUNT(o.domain), o.domain ORDER BY o.domain DESC;"
         result = self.driver.execute_query(request, database_="neo4j", routing_=RO_CONTROL)[0]
@@ -127,3 +157,6 @@ if __name__ == "__main__":
     print(f"Domains: {connector.get_domains()}")
     print(connector.get_random_sequence(args.domain))
     print(connector.get_path_sequences(args.domain, "Множество", "Элемент множества"))
+    term = connector.get_random_term(args.domain)
+    print(term.name)
+    print(connector.get_vicinity(args.domain, term.name))
