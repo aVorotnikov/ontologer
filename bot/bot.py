@@ -30,6 +30,7 @@ INFO_TEXT = '''
 /group Сменить группу
 /assessment Начать контроль знаний
 /stat Получить статистику по заданиям
+/dispute Оспорить результаты
 '''
 
 
@@ -299,6 +300,11 @@ async def get_stat(message: Message, state: FSMContext) -> None:
         formatting.as_key_value("Всего", total)
     ))
     await message.answer(**formatting.as_list(*formatting_list).as_kwargs())
+
+
+@dp.message(Command('dispute'))
+async def get_stat(message: Message, state: FSMContext) -> None:
+    await message.answer("Ещё не реализовано")
 
 
 async def main() -> None:
