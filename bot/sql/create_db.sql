@@ -53,6 +53,6 @@ INSERT INTO ContestationTypes (contestation_type) VALUES ('unprocessed'), ('reje
 
 DROP TABLE IF EXISTS Contestations CASCADE;
 CREATE TABLE Contestations (
-    taskId SERIAL PRIMARY KEY REFERENCES Tasks(task_id),
+    task_id SERIAL PRIMARY KEY REFERENCES Tasks(task_id),
     contestation_type TEXT REFERENCES ContestationTypes(contestation_type)
 );
