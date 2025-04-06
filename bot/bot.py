@@ -266,7 +266,7 @@ async def get_stat(message: Message, state: FSMContext) -> None:
         formatting_list.append(formatting.as_marked_section(
             formatting.Underline(assessment_type_to_string(AssessmentType(stat_for_type[0]))),
             formatting.as_key_value("Зачтены", stat_for_type[1]),
-            formatting.as_key_value("Аппелированы", stat_for_type[2]),
+            formatting.as_key_value("Оспорены", stat_for_type[2]),
             formatting.as_key_value("Всего", stat_for_type[3])
         ))
         passed += stat_for_type[1]
@@ -275,7 +275,7 @@ async def get_stat(message: Message, state: FSMContext) -> None:
     formatting_list.append(formatting.as_marked_section(
         formatting.Underline("Всего"),
         formatting.as_key_value("Зачтены", passed),
-        formatting.as_key_value("Аппелированы", challenged),
+        formatting.as_key_value("Оспорены", challenged),
         formatting.as_key_value("Всего", total)
     ))
     await message.answer(**formatting.as_list(*formatting_list).as_kwargs())
