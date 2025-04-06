@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 
+import ontology_types
+
 from neo4j import GraphDatabase, RoutingControl
 from argparse import ArgumentParser
 import random
-import ontology_types
 
 
 RO_CONTROL = RoutingControl.READ

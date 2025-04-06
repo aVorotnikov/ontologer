@@ -3,7 +3,7 @@
 from llm_connector import LlmConnector
 from ontologies_connector import OntologiesConnector
 from db_connector import DbConnector
-from generate_task import generate_task, generate_task_text
+from generate_task import generate_free_choice_task, generate_free_choice_task_text, generate_test_task, generate_test_task_text
 from free_choice_checker import check_free_choice_answer
 from bot_types import *
 
@@ -197,12 +197,21 @@ async def set_assessment_domain(message: Message, state: FSMContext) -> None:
 
 
 async def free_choice_ask(message: Message, state: FSMContext, domain, number) -> None:
-    task = generate_task(ontologies, domain)
+    task = generate_free_choice_task(ontologies, domain)
     task.start = datetime.now()
     task.number = number
-    task.question = generate_task_text(task)
+    task.question = generate_free_choice_task_text(task)
     await state.update_data(task=task)
     await message.answer(task.question)
+
+
+async def test_ask(message: Message, state: FSMContext, domain, number) -> None:
+    task = generate_test_task(ontologies, domain)
+    task.start = datetime.now()
+    task.number = number
+    task.question = generate_test_task_text(task)
+    await state.update_data(task=task)
+    await message.answer(task.question, reply_markup=create_keyboard(task.options))
 
 
 @dp.message(Assessment.type)
@@ -232,7 +241,7 @@ async def set_assessment_type(message: Message, state: FSMContext) -> None:
             f"Начат контроль знаний \#`{assessment_id}`",
             parse_mode='MarkdownV2',
             reply_markup=ReplyKeyboardRemove())
-        await free_choice_ask(message, state, domain, 1)
+        await test_ask(message, state, domain, 1)
     else:
         await message.answer(
             "Неизвестный тип. Повторите выбор",
@@ -275,7 +284,37 @@ async def proccess_free_choice(message: Message, state: FSMContext) -> None:
 
 @dp.message(Assessment.test)
 async def proccess_test(message: Message, state: FSMContext) -> None:
-    await proccess_free_choice(message, state)
+    data = await get_data(message, state)
+    task = data["task"]
+    passed = False
+    passed_number = data["passed"]
+    if not message.text:
+        await message.answer("Неверно")
+    elif True:
+        await message.answer("Верно")
+        passed = True
+        passed_number += 1
+        await state.update_data(passed=passed_number)
+    else:
+        await message.answer("Неверно")
+
+    assessment_id = data["assessment_id"]
+    db.insert_task(
+        assessment_id,
+        task.number,
+        task.question,
+        task.start,
+        passed,
+        {"source": task.source, "relation": task.relation.value, "options": task.options})
+
+    if task.number == TASK_COUNT_IN_ASSESSMENT:
+        await message.answer(
+            f"Окончен контроль знаний \#`{assessment_id}`\.\nЗачтено {passed_number} из {TASK_COUNT_IN_ASSESSMENT}",
+            parse_mode='MarkdownV2',
+            reply_markup=ReplyKeyboardRemove())
+        await to_main_menu(message, state)
+        return
+    await test_ask(message, state, task.domain, task.number + 1)
 
 
 @dp.message(Command('stat'))
