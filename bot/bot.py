@@ -4,7 +4,7 @@ from llm_connector import LlmConnector
 from ontologies_connector import OntologiesConnector
 from db_connector import DbConnector
 from generate_task import generate_task, generate_task_text
-from checker import check_answer
+from free_choice_checker import check_free_choice_answer
 from bot_types import *
 
 from keyboards import *
@@ -247,7 +247,7 @@ async def proccess_free_choice(message: Message, state: FSMContext) -> None:
     passed_number = data["passed"]
     if not message.text:
         await message.answer("Неверно")
-    elif check_answer(ontologies, llm, task.domain, task.source, task.destination, message.text):
+    elif check_free_choice_answer(ontologies, llm, task.domain, task.source, task.destination, message.text):
         await message.answer("Верно")
         passed = True
         passed_number += 1

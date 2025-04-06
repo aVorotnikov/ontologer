@@ -4,7 +4,7 @@ import sys
 sys.path.append('../bot')
 
 from ontologies_connector import OntologiesConnector
-from checker.construct_sequence import construct_sequence
+from free_choice_checker.construct_sequence import construct_sequence
 
 from argparse import ArgumentParser
 

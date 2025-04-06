@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from checker.construct_sequence import construct_sequence
+from free_choice_checker.construct_sequence import construct_sequence
 from llm_connector import LlmConnector
 from ontologies_connector import OntologiesConnector
 
@@ -22,7 +22,7 @@ def compare_statements(llm: LlmConnector, statement1: str, statement2: str):
     return response.lower().startswith("да")
 
 
-def check_answer(
+def check_free_choice_answer(
     ontologies: OntologiesConnector,
     llm: LlmConnector,
     domain: str,
