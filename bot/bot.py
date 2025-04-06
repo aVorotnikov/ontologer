@@ -309,8 +309,55 @@ async def get_stat(message: Message, state: FSMContext) -> None:
 
 
 @dp.message(Command('dispute'))
-async def get_stat(message: Message, state: FSMContext) -> None:
-    await message.answer("Ещё не реализовано")
+async def dispute_ask_assessment(message: Message, state: FSMContext) -> None:
+    data = await get_data(message, state)
+    assessments = db.get_assessments(data["login"])
+    if 0 == len(assessments):
+        await message.answer("Не найдены контроли знаний")
+        await to_main_menu(message, state)
+        return
+    text = "Выберите контроль знаний:\n"
+    for assessment in assessments:
+        text += f"`{assessment[0]}` начат {assessment[1].strftime('%F %X')}\n"
+    await state.set_state(Contestation.assessment)
+    await message.answer(
+        text.replace('-', '\-').replace('.', '\.'),
+        parse_mode='MarkdownV2',
+        reply_markup=create_keyboard([str(record[0]) for record in assessments]))
+
+
+@dp.message(Contestation.assessment)
+async def dispute_ask_task(message: Message, state: FSMContext) -> None:
+    assessment_id = message.text
+    data = await get_data(message, state)
+    tasks = db.get_tasks(assessment_id, data["login"])
+    if 0 == len(tasks):
+        await message.answer(f"Не найдены подходящие задания в {assessment_id}")
+        await to_main_menu(message, state)
+        return
+    await state.update_data(assessment_id=assessment_id)
+    text = "Выберите задание:\n"
+    for task in tasks:
+        text += f"`{task[0]}`) начато {task[1].strftime('%F %X')} закончено {task[2].strftime('%F %X')}\n"
+    await state.set_state(Contestation.task)
+    await message.answer(
+        text.replace('-', '\-').replace('.', '\.').replace(')', '\)'),
+        parse_mode='MarkdownV2',
+        reply_markup=create_keyboard([str(record[0]) for record in tasks]))
+
+
+@dp.message(Contestation.task)
+async def dispute_final(message: Message, state: FSMContext) -> None:
+    task_number = message.text
+    data = await get_data(message, state)
+    try:
+        db.insert_contestation(data["assessment_id"], task_number, data["login"])
+    except:
+        await message.answer("Произошла ошибка")
+        await to_main_menu(message, state)
+        return
+    await message.answer("Оспаривание зарегистрировано")
+    await to_main_menu(message, state)
 
 
 async def main() -> None:

@@ -21,3 +21,8 @@ class Assessment(StatesGroup):
     type = State()
     test = State()
     free_choice = State()
+
+
+class Contestation(StatesGroup):
+    assessment = State()
+    task = State()

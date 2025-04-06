@@ -75,9 +75,24 @@ class DbConnector:
                 "SELECT task_number, task_start, task_end, task_passed, task_challenged "
                 "FROM Tasks "
                 "LEFT JOIN Assessments ON Tasks.assessment_id=Assessments.assessment_id "
-                "WHERE Tasks.assessment_id=%s AND Assessments.student_login=%s",
+                "LEFT JOIN Contestations ON Tasks.task_id=Contestations.task_id "
+                "WHERE Tasks.assessment_id=%s AND Assessments.student_login=%s AND Contestations.task_id IS NULL",
                 (assessment_id, login))
             return cursor.fetchall()
+
+
+    def insert_contestation(self, assessment_id, task_number, login):
+        with self.driver.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO Contestations (task_id, contestation_type) "
+                "VALUES ("
+                " (SELECT task_id "
+                " FROM Tasks "
+                " LEFT JOIN Assessments ON Tasks.assessment_id=Assessments.assessment_id "
+                " WHERE Tasks.assessment_id=%s AND Tasks.task_number=%s AND Assessments.student_login=%s), "
+                "'unprocessed') "
+                "ON CONFLICT DO NOTHING",
+                (assessment_id, task_number, login))
 
 
     def get_stat(self, login):
@@ -126,3 +141,4 @@ if __name__ == "__main__":
     print("Tasks (incorrect login): {}".format(db.get_tasks(assessment_id, "notivanov")))
     print("Stat: {}".format(db.get_stat("ivanov")))
     print("Stat domains: {}".format(db.get_stat_domains("ivanov")))
+    db.insert_contestation(assessment_id, 1, "ivanov")
