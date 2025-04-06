@@ -1,6 +1,6 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.1.1 Chrome/132.0.6834.210 Electron/34.3.3 Safari/537.36" version="26.1.1">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.2.2 Chrome/134.0.6998.178 Electron/35.1.2 Safari/537.36" version="26.2.2">
   <diagram name="Страница — 1" id="KjR54cfUh2h--IEu27Yo">
-    <mxGraphModel dx="698" dy="470" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1215" dy="828" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -113,7 +113,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="36b95QFSxjrO5mWzAh7E-10" value="Задание со свободным ответом" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="790" y="413.5" width="223" height="104" as="geometry" />
+          <mxGeometry x="790" y="423.5" width="223" height="104" as="geometry" />
         </mxCell>
         <mxCell id="36b95QFSxjrO5mWzAh7E-12" value="+ исходное понятие" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="36b95QFSxjrO5mWzAh7E-10" vertex="1">
           <mxGeometry y="26" width="223" height="26" as="geometry" />
@@ -125,16 +125,13 @@
           <mxGeometry y="78" width="223" height="26" as="geometry" />
         </mxCell>
         <mxCell id="36b95QFSxjrO5mWzAh7E-19" value="Тестовое задание" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="790" y="564.5" width="223" height="104" as="geometry" />
+          <mxGeometry x="790" y="574.5" width="223" height="78" as="geometry" />
         </mxCell>
-        <mxCell id="36b95QFSxjrO5mWzAh7E-22" value="+ список правильных ответов" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="36b95QFSxjrO5mWzAh7E-19" vertex="1">
+        <mxCell id="36b95QFSxjrO5mWzAh7E-22" value="+ список ответов" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="36b95QFSxjrO5mWzAh7E-19" vertex="1">
           <mxGeometry y="26" width="223" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="36b95QFSxjrO5mWzAh7E-23" value="+ список неправильных ответов" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="36b95QFSxjrO5mWzAh7E-19" vertex="1">
-          <mxGeometry y="52" width="223" height="26" as="geometry" />
-        </mxCell>
         <mxCell id="36b95QFSxjrO5mWzAh7E-24" value="+ ответ студента" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="36b95QFSxjrO5mWzAh7E-19" vertex="1">
-          <mxGeometry y="78" width="223" height="26" as="geometry" />
+          <mxGeometry y="52" width="223" height="26" as="geometry" />
         </mxCell>
         <mxCell id="36b95QFSxjrO5mWzAh7E-26" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;«enumeration»&lt;br&gt;&lt;b&gt;Тип контроля знаний&lt;/b&gt;&lt;br&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ Тест&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ Со свободным ответом&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" parent="1" vertex="1">
           <mxGeometry x="110" y="500" width="160" height="78" as="geometry" />
