@@ -204,17 +204,39 @@ async def set_assessment_type(message: Message, state: FSMContext) -> None:
             "Неизвестный тип. Повторите выбор",
             reply_markup=create_keyboard([assessment_type_to_string(assessment_type) for assessment_type in AssessmentType]))
         return
-    await state.update_data(assessment_type=assessment_type)
     data = await get_data(message, state)
     domain = data["assessment_domain"]
     assessment_id=db.insert_assessment(data["login"], assessment_type, domain)
     await state.update_data(assessment_id=assessment_id)
-    await state.set_state(Assessment.tasks)
+    if AssessmentType.FreeChoice == assessment_type:
+        await state.set_state(Assessment.free_choice)
+    elif AssessmentType.Test == assessment_type:
+        await state.set_state(Assessment.test)
+    else:
+        await message.answer(
+            "Неизвестный тип. Повторите выбор",
+            reply_markup=create_keyboard([assessment_type_to_string(assessment_type) for assessment_type in AssessmentType]))
+        return
     await message.answer(f"Начат контроль знаний \#`{assessment_id}`", parse_mode='MarkdownV2')
     await ask(message, domain)
 
 
-@dp.message(Assessment.tasks)
+@dp.message(Assessment.free_choice)
+async def get_answer(message: Message, state: FSMContext) -> None:
+    data = await get_data(message, state)
+    domain = data["assessment_domain"]
+    if message.chat.id in tasks:
+        task = tasks[message.chat.id]
+        if not message.text:
+            await message.answer("Сообщение не содержит текста")
+        elif check_answer(ontologies, llm, domain, task.source, task.destination, message.text):
+            await message.answer("Верно")
+        else:
+            await message.answer("Неверно")
+    await ask(message, domain)
+
+
+@dp.message(Assessment.test)
 async def get_answer(message: Message, state: FSMContext) -> None:
     data = await get_data(message, state)
     domain = data["assessment_domain"]

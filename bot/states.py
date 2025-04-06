@@ -19,4 +19,5 @@ class ChangeName(StatesGroup):
 class Assessment(StatesGroup):
     domain = State()
     type = State()
-    tasks = State()
+    test = State()
+    free_choice = State()
