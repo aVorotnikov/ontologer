@@ -20,7 +20,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart, Command
-from aiogram.types import Message
+from aiogram.types import Message, ReplyKeyboardRemove
 from aiogram.fsm.context import FSMContext
 import aiogram.utils.formatting as formatting
 
@@ -88,7 +88,7 @@ dp = Dispatcher()
 
 
 async def send_info(message: Message) -> None:
-    await message.answer(INFO_TEXT)
+    await message.answer(INFO_TEXT, reply_markup=ReplyKeyboardRemove())
 
 
 async def to_main_menu(message: Message, state: FSMContext):
@@ -221,11 +221,17 @@ async def set_assessment_type(message: Message, state: FSMContext) -> None:
     await state.update_data(passed=0)
     if AssessmentType.FreeChoice == assessment_type:
         await state.set_state(Assessment.free_choice)
-        await message.answer(f"Начат контроль знаний \#`{assessment_id}`", parse_mode='MarkdownV2')
+        await message.answer(
+            f"Начат контроль знаний \#`{assessment_id}`",
+            parse_mode='MarkdownV2',
+            reply_markup=ReplyKeyboardRemove())
         await free_choice_ask(message, state, domain, 1)
     elif AssessmentType.Test == assessment_type:
         await state.set_state(Assessment.test)
-        await message.answer(f"Начат контроль знаний \#`{assessment_id}`", parse_mode='MarkdownV2')
+        await message.answer(
+            f"Начат контроль знаний \#`{assessment_id}`",
+            parse_mode='MarkdownV2',
+            reply_markup=ReplyKeyboardRemove())
         await free_choice_ask(message, state, domain, 1)
     else:
         await message.answer(
