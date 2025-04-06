@@ -5,6 +5,7 @@ from ontologies_connector import OntologiesConnector
 from db_connector import DbConnector
 from generate_task import generate_free_choice_task, generate_free_choice_task_text, generate_test_task, generate_test_task_text
 from free_choice_checker import check_free_choice_answer
+from test_checker import check_test_answer
 from bot_types import *
 
 from keyboards import *
@@ -290,7 +291,7 @@ async def proccess_test(message: Message, state: FSMContext) -> None:
     passed_number = data["passed"]
     if not message.text:
         await message.answer("Неверно")
-    elif True:
+    elif check_test_answer(ontologies, task.domain, task.source, task.relation, message.text):
         await message.answer("Верно")
         passed = True
         passed_number += 1
