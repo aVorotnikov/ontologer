@@ -92,6 +92,23 @@ class DbConnector:
             return cursor.fetchall()
 
 
+    def get_stat_domains(self, login):
+        with self.driver.cursor() as cursor:
+            cursor.execute(
+                "SELECT "
+                "Assessments.domain_name, "
+                "Assessments.assessment_type, "
+                "COUNT(*) FILTER (WHERE task_passed), "
+                "COUNT(*) FILTER (WHERE task_challenged), "
+                "COUNT(*) "
+                "FROM Tasks "
+                "LEFT JOIN Assessments ON Tasks.assessment_id=Assessments.assessment_id "
+                "WHERE Assessments.student_login=%s "
+                "GROUP BY Assessments.domain_name, Assessments.assessment_type",
+                (login,))
+            return cursor.fetchall()
+
+
 if __name__ == "__main__":
     db = DbConnector("ontologer", "postgres", "aaaaaa", "localhost", 5432)
     db.insert_domains(["Наивная теория множеств"])
@@ -103,3 +120,4 @@ if __name__ == "__main__":
     print("Assessments: {}".format(db.get_assessments("ivanov")))
     print("Tasks: {}".format(db.get_tasks(assessment_id)))
     print("Stat: {}".format(db.get_stat("ivanov")))
+    print("Stat domains: {}".format(db.get_stat_domains("ivanov")))
