@@ -49,7 +49,7 @@ def _generate_test_task(connector: OntologiesConnector, domain):
         raise RuntimeError(f"Failed to generate task: no vicinity in '{domain}' for '{term}'")
     options = set()
     path = vicinity[0]
-    relation = path[1].type
+    relation = path[1]
     options.add(path[-1].name)
     for path in vicinity:
         name = path[-1].name
@@ -85,29 +85,29 @@ def generate_test_task(connector: OntologiesConnector, domain):
 
 
 def generate_test_task_text(task: TestTask):
-    relType = task.relation
-    if RelationType.Inheritance == relType:
+    relationType = task.relation.type
+    if RelationType.Inheritance == relationType:
         relation = "наследования"
-    elif RelationType.Realization == relType:
+    elif RelationType.Realization == relationType:
         relation = "реализации"
-    elif RelationType.Dependency == relType:
+    elif RelationType.Dependency == relationType:
         relation = "зависимости"
-    elif RelationType.Aggregation == relType:
+    elif RelationType.Aggregation == relationType:
         relation = "агрегации"
-    elif RelationType.Composition == relType:
+    elif RelationType.Composition == relationType:
         relation = "композиции"
-    elif RelationType.Instance == relType:
+    elif RelationType.Instance == relationType:
         relation = "инстанцирования"
-    elif RelationType.Manifest == relType:
+    elif RelationType.Manifest == relationType:
         relation = "манифестации"
-    elif RelationType.Input == relType:
+    elif RelationType.Input == relationType:
         relation = "входа алгоритма"
-    elif RelationType.Output == relType:
+    elif RelationType.Output == relationType:
         relation = "выхода алгоритма"
-    elif RelationType.Association == relType:
-        relation = "ассоциации"
+    elif RelationType.Association == relationType:
+        relation = f"ассоциации (предикат '{task.relation.predicate}')"
     else:
-        raise TypeError(f"Unknown relation: {relType}")
+        raise TypeError(f"Unknown relation: {relationType}")
     return f'Какое понятие связано с понятием "{task.source}" отношением {relation}?'
 
 

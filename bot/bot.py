@@ -306,7 +306,7 @@ async def proccess_test(message: Message, state: FSMContext) -> None:
         task.question,
         task.start,
         passed,
-        {"source": task.source, "relation": task.relation.value, "options": task.options})
+        {"source": task.source, "relation": task.relation.type.value, "options": task.options})
 
     if task.number == TASK_COUNT_IN_ASSESSMENT:
         await message.answer(
