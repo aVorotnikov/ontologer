@@ -106,7 +106,7 @@ async def proccess_login(message: Message, state: FSMContext):
     users = db.get_student(user.username)
     if 0 == len(users):
         await state.set_state(Registration.name)
-        await message.answer("Введите имя")
+        await message.answer("Введите фамилию и имя")
         return False
     elif 1 == len(users):
         await state.update_data(name=users[0][1])
@@ -136,7 +136,7 @@ async def command_start_handler(message: Message, state: FSMContext) -> None:
 @dp.message(Command('name'))
 async def change_name(message: Message, state: FSMContext) -> None:
     await state.set_state(ChangeName.name)
-    await message.answer("Введите имя")
+    await message.answer("Введите фамилию и имя")
 
 
 @dp.message(ChangeName.name)
