@@ -358,7 +358,8 @@ async def dispute_ask_assessment(message: Message, state: FSMContext) -> None:
         return
     text = "Выберите контроль знаний:\n"
     for assessment in assessments:
-        text += f"`{assessment[0]}` начат {assessment[1].strftime('%F %X')}\n"
+        text += f"`{assessment[0]}` начат {assessment[1].strftime('%F %X')} " \
+            f"\(\"{assessment[2]}\", {assessment_type_to_string(AssessmentType(assessment[3]))}\)\n"
     await state.set_state(Contestation.assessment)
     await message.answer(
         text.replace('-', '\-').replace('.', '\.'),

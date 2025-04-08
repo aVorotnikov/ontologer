@@ -64,7 +64,10 @@ class DbConnector:
 
     def get_assessments(self, login):
         with self.driver.cursor() as cursor:
-            cursor.execute("SELECT assessment_id, assessment_start FROM Assessments WHERE student_login=%s",
+            cursor.execute(
+                "SELECT assessment_id, assessment_start, domain_name, assessment_type "
+                "FROM Assessments "
+                "WHERE student_login=%s",
                 (login,))
             return cursor.fetchall()
 
