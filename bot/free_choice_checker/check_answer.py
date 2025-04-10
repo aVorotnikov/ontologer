@@ -35,4 +35,9 @@ def check_free_choice_answer(
             reference = generate_answer(sequence)
             if (compare_statements(llm, answer, reference)):
                 return True
+        sequences = ontologies.get_path_sequences(domain, destination, source, length)
+        for sequence in  sequences:
+            reference = generate_answer(sequence)
+            if (compare_statements(llm, answer, reference)):
+                return True
     return False
