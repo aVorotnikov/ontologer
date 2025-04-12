@@ -7,6 +7,7 @@ from generate_task import generate_free_choice_task, generate_free_choice_task_t
 from free_choice_checker import check_free_choice_answer
 from test_checker import check_test_answer
 from bot_types import *
+from generate_hist import create_stat_hist
 
 from keyboards import *
 from states import *
@@ -21,7 +22,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart, Command
-from aiogram.types import Message, ReplyKeyboardRemove
+from aiogram.types import Message, ReplyKeyboardRemove, FSInputFile
 from aiogram.fsm.context import FSMContext
 import aiogram.utils.formatting as formatting
 
@@ -321,7 +322,8 @@ async def proccess_test(message: Message, state: FSMContext) -> None:
 @dp.message(Command('stat'))
 async def get_stat(message: Message, state: FSMContext) -> None:
     data = await get_data(message, state)
-    stat = db.get_stat(data["login"])
+    login = data["login"]
+    stat = db.get_stat(login)
     if 0 == len(stat):
         await message.answer("Задания не найдены")
         return
@@ -346,6 +348,9 @@ async def get_stat(message: Message, state: FSMContext) -> None:
         formatting.as_key_value("Всего", total)
     ))
     await message.answer(**formatting.as_list(*formatting_list).as_kwargs())
+    hist_file_name = create_stat_hist(db, login)
+    if hist_file_name:
+        await message.answer_photo(photo=FSInputFile(hist_file_name))
 
 
 @dp.message(Command('dispute'))

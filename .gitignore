@@ -1,6 +1,10 @@
 # Drawio auxillary files
 .*.drawio.bkp
 
+# Histograms
+bot/_runtime_diagrams/*.png
+_runtime_diagrams/*.png
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

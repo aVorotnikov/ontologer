@@ -3,3 +3,5 @@ pymorphy2==0.9.1
 aiogram==3.15.0
 ollama==0.4.2
 psycopg==3.1.19
+matplotlib==3.10.0
+numpy==1.26.4
