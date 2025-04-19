@@ -6,8 +6,9 @@ INSERT INTO Groups (group_number) VALUES ('Нет подходящей');
 
 DROP TABLE IF EXISTS Students CASCADE;
 CREATE TABLE Students (
-    student_login TEXT PRIMARY KEY,
-    student_name TEXT,
+    student_id BIGINT PRIMARY KEY,
+    student_login TEXT,
+    student_name TEXT NOT NULL,
     group_number TEXT REFERENCES Groups(group_number)
 );
 
@@ -25,7 +26,7 @@ CREATE TABLE Domains (
 DROP TABLE IF EXISTS Assessments CASCADE;
 CREATE TABLE Assessments (
     assessment_id SERIAL PRIMARY KEY,
-    student_login TEXT REFERENCES Students(student_login),
+    student_id BIGINT REFERENCES Students(student_id),
     assessment_type TEXT REFERENCES AssessmentTypes(assessment_type),
     domain_name TEXT REFERENCES Domains(domain_name),
     assessment_start TIMESTAMP NOT NULL

@@ -103,16 +103,16 @@ async def proccess_login(message: Message, state: FSMContext):
     if not user:
         await message.answer("Не могу определить имя пользователя")
         return False
-    await state.update_data(login=user.username)
-    users = db.get_student(user.username)
-    if 0 == len(users):
+    await state.update_data(id=user.id, login=user.username)
+    students = db.get_student(user.id)
+    if 0 == len(students):
         await state.set_state(Registration.name)
         await message.answer("Введите фамилию и имя")
         return False
-    elif 1 == len(users):
-        await state.update_data(name=users[0][1])
-        await state.update_data(group=users[0][2])
-        await message.answer(f"Привет, {users[0][1]}!")
+    elif 1 == len(students):
+        await state.update_data(name=students[0][2])
+        await state.update_data(group=students[0][3])
+        await message.answer(f"Привет, {students[0][2]}!")
         return True
     else:
         await message.answer("Внутренняя ошибка")
@@ -121,7 +121,7 @@ async def proccess_login(message: Message, state: FSMContext):
 
 async def get_data(message: Message, state: FSMContext):
     data = await state.get_data()
-    if "login" not in data or "name" not in data or "group" not in data:
+    if "id" not in data or "login" not in data or "name" not in data or "group" not in data:
         if not await proccess_login(message, state):
             raise RuntimeError("User need login")
         return await state.get_data()
@@ -144,7 +144,7 @@ async def change_name(message: Message, state: FSMContext) -> None:
 async def change_name_final(message: Message, state: FSMContext) -> None:
     data = await get_data(message, state)
     name = message.text
-    db.insert_student(data["login"],name, data["group"])
+    db.insert_student(data["id"], data["login"], name, data["group"])
     await proccess_login(message, state)
     await to_main_menu(message, state)
 
@@ -166,7 +166,7 @@ async def change_group(message: Message, state: FSMContext) -> None:
 async def change_group_final(message: Message, state: FSMContext) -> None:
     data = await get_data(message, state)
     group = message.text
-    db.insert_student(data["login"], data["name"], group)
+    db.insert_student(data["id"], data["login"], data["name"], group)
     await proccess_login(message, state)
     await to_main_menu(message, state)
 
@@ -175,7 +175,7 @@ async def change_group_final(message: Message, state: FSMContext) -> None:
 async def registration_set_group(message: Message, state: FSMContext) -> None:
     data = await state.get_data()
     group = message.text
-    db.insert_student(data["login"], data["name"], group)
+    db.insert_student(data["id"], data["login"], data["name"], group)
     await proccess_login(message, state)
     await to_main_menu(message, state)
 
@@ -227,7 +227,7 @@ async def set_assessment_type(message: Message, state: FSMContext) -> None:
         return
     data = await get_data(message, state)
     domain = data["assessment_domain"]
-    assessment_id=db.insert_assessment(data["login"], assessment_type, domain)
+    assessment_id=db.insert_assessment(data["id"], assessment_type, domain)
     await state.update_data(assessment_id=assessment_id)
     await state.update_data(passed=0)
     if AssessmentType.FreeChoice == assessment_type:
@@ -322,8 +322,8 @@ async def proccess_test(message: Message, state: FSMContext) -> None:
 @dp.message(Command('stat'))
 async def get_stat(message: Message, state: FSMContext) -> None:
     data = await get_data(message, state)
-    login = data["login"]
-    stat = db.get_stat(login)
+    user_id = data["id"]
+    stat = db.get_stat(user_id)
     if 0 == len(stat):
         await message.answer("Задания не найдены")
         return
@@ -348,7 +348,7 @@ async def get_stat(message: Message, state: FSMContext) -> None:
         formatting.as_key_value("Всего", total)
     ))
     await message.answer(**formatting.as_list(*formatting_list).as_kwargs())
-    hist_file_name = create_stat_hist(db, login)
+    hist_file_name = create_stat_hist(db, user_id)
     if hist_file_name:
         await message.answer_photo(photo=FSInputFile(hist_file_name))
 
@@ -356,7 +356,7 @@ async def get_stat(message: Message, state: FSMContext) -> None:
 @dp.message(Command('dispute'))
 async def dispute_ask_assessment(message: Message, state: FSMContext) -> None:
     data = await get_data(message, state)
-    assessments = db.get_assessments(data["login"])
+    assessments = db.get_assessments(data["id"])
     if 0 == len(assessments):
         await message.answer("Не найдены контроли знаний")
         await to_main_menu(message, state)
@@ -376,7 +376,7 @@ async def dispute_ask_assessment(message: Message, state: FSMContext) -> None:
 async def dispute_ask_task(message: Message, state: FSMContext) -> None:
     assessment_id = message.text
     data = await get_data(message, state)
-    tasks = db.get_tasks(assessment_id, data["login"])
+    tasks = db.get_tasks(assessment_id, data["id"])
     if 0 == len(tasks):
         await message.answer(f"Не найдены подходящие задания в {assessment_id}")
         await to_main_menu(message, state)
@@ -397,7 +397,7 @@ async def dispute_final(message: Message, state: FSMContext) -> None:
     task_number = message.text
     data = await get_data(message, state)
     try:
-        db.insert_contestation(data["assessment_id"], task_number, data["login"])
+        db.insert_contestation(data["assessment_id"], task_number, data["id"])
     except:
         await message.answer("Произошла ошибка")
         await to_main_menu(message, state)

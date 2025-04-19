@@ -14,8 +14,8 @@ if not os.path.exists(DIAGRAMS_DIRECTORY):
     os.makedirs(DIAGRAMS_DIRECTORY)
 
 
-def create_stat_hist(db: DbConnector, login: str):
-    stat = db.get_stat_domains(login)
+def create_stat_hist(db: DbConnector, id):
+    stat = db.get_stat_domains(id)
     if len(stat) == 0:
         return None
 
@@ -44,11 +44,11 @@ def create_stat_hist(db: DbConnector, login: str):
     ax.set_xticklabels(labels, rotation=19)
     ax.legend()
 
-    file_name = f"{DIAGRAMS_DIRECTORY}/{login}_hist.png"
+    file_name = f"{DIAGRAMS_DIRECTORY}/{id}_hist.png"
     fig.savefig(file_name, dpi=100)
     return file_name
 
 
 if __name__ == "__main__":
     db = DbConnector("ontologer", "postgres", "aaaaaa", "localhost", 5432)
-    print(create_stat_hist(db, "vkWarrior"))
+    print(create_stat_hist(db, 1))
