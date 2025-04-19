@@ -348,7 +348,7 @@ async def get_stat(message: Message, state: FSMContext) -> None:
         formatting.as_key_value("Всего", total)
     ))
     await message.answer(**formatting.as_list(*formatting_list).as_kwargs())
-    hist_file_name = create_stat_hist(db, user_id)
+    hist_file_name = create_stat_hist(db, user_id, data["name"])
     if hist_file_name:
         await message.answer_photo(photo=FSInputFile(hist_file_name))
 
