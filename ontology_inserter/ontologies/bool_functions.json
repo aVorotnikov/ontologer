@@ -39,7 +39,7 @@
         {"type": "Input", "name1": "Формула", "name2": "Эквивалентные преобразования"},
         {"type": "Output", "name1": "Эквивалентные преобразования", "name2": "Формула"},
         {"type": "Association", "name1": "Формула", "name2": "Булева функция", "predicate": "реализует", "predicateInv": "реализуется", "pole1": {"multiplicity": "*"}, "pole2": {"multiplicity": "1"}},
-        {"type": "Inheritance", "name1": "Совершенная дизъюнктивная нормальная форма", "name2": "Конъюнктивная форма"},
+        {"type": "Inheritance", "name1": "Совершенная конъюнктивная нормальная форма", "name2": "Конъюнктивная форма"},
         {"type": "Inheritance", "name1": "Конъюнктивная форма", "name2": "Формула"},
         {"type": "Inheritance", "name1": "Минимальный терм", "name2": "Формула"},
         {"type": "Inheritance", "name1": "Дизъюнктивная форма", "name2": "Формула"},
