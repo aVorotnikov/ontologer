@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import sys
-sys.path.append('../bot')
+sys.path.append('../../bot')
 
 from ontologies_connector import OntologiesConnector
 from free_choice_checker.construct_sequence import construct_sequence
