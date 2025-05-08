@@ -273,7 +273,7 @@ async def proccess_free_choice(message: Message, state: FSMContext) -> None:
         task.question,
         task.start,
         passed,
-        {"source": task.source, "destination": task.destination, "difficulty": task.difficulty})
+        {"source": task.source, "destination": task.destination, "difficulty": task.difficulty, "answer": message.text})
 
     if task.number == TASK_COUNT_IN_ASSESSMENT:
         await message.answer(
@@ -307,7 +307,7 @@ async def proccess_test(message: Message, state: FSMContext) -> None:
         task.question,
         task.start,
         passed,
-        {"source": task.source, "relation": task.relation.type.value, "options": task.options})
+        {"source": task.source, "relation": task.relation.type.value, "options": task.options, "answer": message.text})
 
     if task.number == TASK_COUNT_IN_ASSESSMENT:
         await message.answer(
