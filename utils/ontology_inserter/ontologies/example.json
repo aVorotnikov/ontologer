@@ -1,0 +1,25 @@
+{
+    "domain": "Пример для ВКР",
+    "nodes": [
+        {"name": "Формула", "modifiers": []},
+        {"name": "Интерпретация", "modifiers": ["algorithm"]},
+        {"name": "Константа", "modifiers": []},
+        {"name": "Связка", "modifiers": ["abstract"]},
+        {"name": "Переменная", "modifiers": []},
+        {"name": "Предикат", "modifiers": []},
+        {"name": "Квантор", "modifiers": ["abstract"]},
+        {"name": "Квантор всеобщности", "modifiers": []},
+        {"name": "Квантор существования", "modifiers": []}
+    ],
+    "relations": [
+        {"type": "Input", "name1": "Формула", "name2": "Интерпретация"},
+        {"type": "Output", "name1": "Интерпретация", "name2": "Константа"},
+        {"type": "Aggregation", "name1": "Константа", "name2": "Формула"},
+        {"type": "Aggregation", "name1": "Связка", "name2": "Формула"},
+        {"type": "Aggregation", "name1": "Переменная", "name2": "Формула"},
+        {"type": "Aggregation", "name1": "Предикат", "name2": "Формула"},
+        {"type": "Aggregation", "name1": "Квантор", "name2": "Формула"},
+        {"type": "Inheritance", "name1": "Квантор всеобщности", "name2": "Квантор"},
+        {"type": "Inheritance", "name1": "Квантор существования", "name2": "Квантор"}
+    ]
+}
