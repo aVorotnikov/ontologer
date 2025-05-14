@@ -5,6 +5,9 @@
 bot/_runtime_diagrams/*.png
 _runtime_diagrams/*.png
 
+# All tables
+*.csv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
