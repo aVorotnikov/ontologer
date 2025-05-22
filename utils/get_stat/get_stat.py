@@ -107,6 +107,22 @@ class DbConnector:
             return cursor.fetchall()
 
 
+    def get_durations(self, assessment_type):
+        with self.driver.cursor() as cursor:
+            cursor.execute(
+                "SELECT "
+                "Assessments.domain_name, "
+                "Tasks.task_start, "
+                "Tasks.task_end "
+                "FROM Tasks "
+                "LEFT JOIN Assessments ON Tasks.assessment_id=Assessments.assessment_id "
+                "LEFT JOIN Students ON Assessments.student_id=Students.student_id "
+                "WHERE Assessments.assessment_type=%s AND "
+                "Students.group_number != 'Нет подходящей'",
+                (assessment_type.value,))
+            return cursor.fetchall()
+
+
 def create_tasks_stat_hist(db: DbConnector):
     stat = db.get_tasks_domains()
     if len(stat) == 0:
@@ -209,6 +225,53 @@ def get_successful_contestations_reasons():
     fig.savefig("successful_contestations_reasons.png")
 
 
+def get_durations_data(durations):
+    results_domains = {
+        "Полная выборка": []
+    }
+
+    for row in durations:
+        if row[0] not in results_domains:
+            results_domains[row[0]] = []
+        delta_seconds = (row[2] - row[1]).total_seconds()
+        results_domains[row[0]].append(delta_seconds)
+        results_domains["Полная выборка"].append(delta_seconds)
+
+    res = dict()
+    for key, value in results_domains.items():
+        res[key] = np.array(value)
+
+    return res
+
+
+def create_boxplots(stat, title, name):
+    labels = stat.keys()
+    fig, ax = plt.subplots()
+    ax.set_ylabel("Время, с")
+    bplot = ax.boxplot(stat.values(), tick_labels=labels)
+    ax.grid(axis='y')
+    fig.suptitle(title)
+    fig.savefig(name)
+
+
+def get_sample_params(sample, name):
+    print(f"{name}:")
+    print(f"\tСреднее: {np.average(sample)}")
+    print(f"\tМедиана: {np.median(sample)}")
+    print(f"\tМинимум: {np.min(sample)}")
+    print(f"\tМаксимум: {np.max(sample)}")
+
+
+def get_durations(db: DbConnector):
+    test_stat = get_durations_data(db.get_durations(AssessmentType.Test))
+    create_boxplots(test_stat, "Время выполнения тестовых заданий", "test_durations.png")
+    get_sample_params(test_stat["Полная выборка"], "Тест")
+
+    free_choice_stat = get_durations_data(db.get_durations(AssessmentType.FreeChoice))
+    create_boxplots(free_choice_stat, "Время выполнения заданий со свободным выбором", "free_choice_durations.png")
+    get_sample_params(free_choice_stat["Полная выборка"], "Задания со свободным выбором")
+
+
 if __name__ == "__main__":
     db = DbConnector("ontologer", "postgres", "aaaaaa", "localhost", 5432)
     task_stat = db.get_tasks_number()
@@ -224,3 +287,4 @@ if __name__ == "__main__":
     get_contestations_domains(db)
     get_contestations_task_types(db)
     get_successful_contestations_reasons()
+    get_durations(db)
