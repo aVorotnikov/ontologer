@@ -215,8 +215,8 @@ def get_contestations_task_types(db: DbConnector):
 
 def get_successful_contestations_reasons():
     stat = {
-        "Ошибка в онтологиях": 1,
-        "Ошибка языковой модели": 2
+        "Ошибка в онтологиях": 32,
+        "Ошибка языковой модели": 27
     }
 
     fig, ax = plt.subplots()
@@ -272,6 +272,17 @@ def get_durations(db: DbConnector):
     get_sample_params(free_choice_stat["Полная выборка"], "Задания со свободным выбором")
 
 
+def get_results_hist():
+    stat = [4.1, 3.7, 3.7, 4.4, 4.1, 4.2, 3, 5, 4.3, 4.9, 3.7, 1.8, 2.2, 0.2, 0.2, 0.8, 0.5, 0.5, 1.8, 0.9, 0.9, 0, 0.9, 0]
+    print(f"Всего оценок: {len(stat)}")
+
+    fig, ax = plt.subplots()
+    ax.hist(stat, bins=5)
+    ax.grid(axis='y')
+    fig.suptitle(f"Гистограмма оценок")
+    fig.savefig("results_hist.png", dpi=100)
+
+
 if __name__ == "__main__":
     db = DbConnector("ontologer", "postgres", "aaaaaa", "localhost", 5432)
     task_stat = db.get_tasks_number()
@@ -286,5 +297,6 @@ if __name__ == "__main__":
     get_contestations_types(db)
     get_contestations_domains(db)
     get_contestations_task_types(db)
-    get_successful_contestations_reasons()
     get_durations(db)
+    get_successful_contestations_reasons()
+    get_results_hist()
