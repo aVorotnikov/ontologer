@@ -46,7 +46,8 @@ class DbConnector:
                 "LEFT JOIN Assessments ON Tasks.assessment_id=Assessments.assessment_id "
                 "LEFT JOIN Students ON Assessments.student_id=Students.student_id "
                 "WHERE Students.group_number != 'Нет подходящей' "
-                "GROUP BY Assessments.domain_name, Assessments.assessment_type")
+                "GROUP BY Assessments.domain_name, Assessments.assessment_type "
+                "ORDER BY Assessments.domain_name, Assessments.assessment_type")
             return cursor.fetchall()
 
 
@@ -141,6 +142,7 @@ def create_tasks_stat_hist(db: DbConnector):
         val4.append(column[5])
 
     fig, ax = plt.subplots()
+    ax.set_ylabel("Количество заданий")
     fig.set_size_inches(18.5, 10.5)
     width = 0.2
     x = np.arange(len(labels))
@@ -188,6 +190,7 @@ def get_contestations_domains(db: DbConnector):
     values = [row[1] for row in stat]
 
     fig, ax = plt.subplots()
+    fig.set_size_inches(8, 5)
     ax.pie(values, labels=labels, autopct='%1.1f%%')
     fig.suptitle(f"Количество оспариваний по главам")
     fig.savefig("contestations_domains.png")
@@ -205,6 +208,7 @@ def get_contestations_task_types(db: DbConnector):
     values = [row[1] for row in stat]
 
     fig, ax = plt.subplots()
+    fig.set_size_inches(7, 5)
     ax.pie(values, labels=labels, autopct='%1.1f%%')
     fig.suptitle(f"Количество оспариваний по типам заданий")
     fig.savefig("contestations_task_types.png")
@@ -247,9 +251,12 @@ def get_durations_data(durations):
 def create_boxplots(stat, title, name):
     labels = stat.keys()
     fig, ax = plt.subplots()
+    fig.set_size_inches(10, 7)
     ax.set_ylabel("Время, с")
     bplot = ax.boxplot(stat.values(), tick_labels=labels)
+    ax.tick_params(axis='x', rotation=15)
     ax.grid(axis='y')
+    ax.set_ylim(0, 200)
     fig.suptitle(title)
     fig.savefig(name)
 
@@ -277,6 +284,7 @@ def get_results_hist():
     print(f"Всего оценок: {len(stat)}")
 
     fig, ax = plt.subplots()
+    ax.set_ylabel("Количество заданий")
     ax.hist(stat, bins=5)
     ax.grid(axis='y')
     fig.suptitle(f"Гистограмма оценок")
