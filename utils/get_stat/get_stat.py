@@ -31,7 +31,7 @@ class DbConnector:
             return cursor.fetchone()
 
 
-    def get_tasks_domains(self):
+    def get_tasks_domains(self, assessment_type: AssessmentType):
         with self.driver.cursor() as cursor:
             cursor.execute(
                 "SELECT "
@@ -45,9 +45,11 @@ class DbConnector:
                 "FROM Tasks "
                 "LEFT JOIN Assessments ON Tasks.assessment_id=Assessments.assessment_id "
                 "LEFT JOIN Students ON Assessments.student_id=Students.student_id "
-                "WHERE Students.group_number != 'Нет подходящей' "
+                "WHERE Assessments.assessment_type = %s AND "
+                "Students.group_number != 'Нет подходящей' "
                 "GROUP BY Assessments.domain_name, Assessments.assessment_type "
-                "ORDER BY Assessments.domain_name, Assessments.assessment_type")
+                "ORDER BY Assessments.domain_name, Assessments.assessment_type",
+                (assessment_type.value,))
             return cursor.fetchall()
 
 
@@ -124,8 +126,8 @@ class DbConnector:
             return cursor.fetchall()
 
 
-def create_tasks_stat_hist(db: DbConnector):
-    stat = db.get_tasks_domains()
+def create_tasks_stat_hist_typed(db: DbConnector, assessment_type: AssessmentType, title, name):
+    stat = db.get_tasks_domains(assessment_type)
     if len(stat) == 0:
         return
 
@@ -135,7 +137,7 @@ def create_tasks_stat_hist(db: DbConnector):
     val3 = []
     val4 = []
     for column in stat:
-        labels.append(f"{column[0]}\n({assessment_type_to_string(AssessmentType(column[1]))})")
+        labels.append(column[0])
         val1.append(column[2])
         val2.append(column[3])
         val3.append(column[4])
@@ -143,7 +145,7 @@ def create_tasks_stat_hist(db: DbConnector):
 
     fig, ax = plt.subplots()
     ax.set_ylabel("Количество заданий")
-    fig.set_size_inches(18.5, 10.5)
+    fig.set_size_inches(10, 7)
     width = 0.2
     x = np.arange(len(labels))
 
@@ -158,10 +160,15 @@ def create_tasks_stat_hist(db: DbConnector):
 
     ax.grid(axis='y')
     ax.set_xticks(x)
-    ax.set_xticklabels(labels, rotation=19)
+    ax.set_xticklabels(labels, rotation=15)
     ax.legend()
-    fig.suptitle(f"Результаты оценивания заданий")
-    fig.savefig("task_results.png", dpi=100)
+    fig.suptitle(title)
+    fig.savefig(name, dpi=100)
+
+
+def create_tasks_stat_hist(db: DbConnector):
+    create_tasks_stat_hist_typed(db, AssessmentType.Test, "Результаты оценивания тестовых заданий", "test_tasks_results.png")
+    create_tasks_stat_hist_typed(db, AssessmentType.FreeChoice, "Результаты оценивания заданий со свободным ответом", "free_choce_tasks_results.png")
 
 
 def get_contestations_types(db: DbConnector):
